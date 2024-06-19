@@ -8,10 +8,10 @@ class RoleBasedRedirectionMiddleware:
     def __call__(self, request):
         response = self.get_response(request)
         if request.user.is_authenticated and request.path == '/':
-            if request.user.groups.filter(name='hr_staff').exists():
+            if request.user.role =='hr_staff':
                 return redirect('hr_dashboard')
-            elif request.user.groups.filter(name='store_staff').exists():
+            elif request.user.role =='store_staff':
                 return redirect('store_dashboard')
-            elif request.user.is_superuser:
+            elif request.user.is_superuser or request.user.role == 'admin':
                 return redirect('admin_dashboard')
         return response
