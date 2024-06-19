@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if form.instance.pk %}Edit{% else %}Add{% endif %} Position
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h3>
+        {% if form.instance.pk %}Edit{% else %}Add{% endif %} Position
+    </h3>
+
+    <div class="col-md-7">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" required
+                    {% if form.instance.pk %}value="{{ form.instance.name }}"{% endif %}>
+            </div>
+            <hr>
+            <button type="submit" class="btn btn-outline-primary" style="margin-right: 10px;">Save</button>
+            <a href="{% url 'hrms:position_list' %}" class="btn btn-outline-secondary">Cancel</a>
+        </form>
+    </div>
+    
+</div>
+{% endblock %}

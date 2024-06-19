@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Employee Detail: {{ employee.first_name }} {{ employee.last_name }}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header bg-dark text-light d-flex justify-content-between align-items-center">
+                    <div>{% if previous_employee %}
+                        <a href="{% url 'hrms:employee_detail' previous_employee.id %}" class="btn btn-outline-light" style="margin-right: 10px;"><</a>
+                        {% endif %}
+                        {% if next_employee %}
+                        <a href="{% url 'hrms:employee_detail' next_employee.id %}" class="btn btn-outline-light">></a>
+                        {% endif %}
+                    </div>
+                    <div class="text-center">{{ employee.first_name}} Profile</div>
+                    <div>
+                        <a href="{% url 'hrms:employee_update' employee.pk %}" class="btn btn-outline-light btn-sm mx-1" style="margin-right: 10px;">Edit</a>
+                        <a href="{% url 'hrms:employee_delete' employee.pk %}" class="btn btn-outline-danger btn-sm mx-1" onclick="return confirm('Are you sure you want to delete this employee?')">Delete</a>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4 text-center">
+                            {% if employee.picture %}
+                                <img src="{{ employee.picture.url }}" alt="Employee Photo" class="img-fluid rounded-circle">
+                            {% else %}
+                                <img src="{% static 'images/no-profile.png' %}" alt="No Picture" class="img-fluid rounded-circle">
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row mb-2">
+                                <div class="col-sm-4"><strong>Full Name:</strong></div>
+                                <div class="col-sm-8"><h4>{{ employee.first_name }} {{ employee.middle_name }} {% if employee.last_name %} {{ employee.last_name }} {%endif %}</h4></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-4"><strong>Gender:</strong></div>
+                                <div class="col-sm-8">{{ employee.get_gender_display }}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-4"><strong>Email:</strong></div>
+                                <div class="col-sm-8">{{ employee.email }}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-4"><strong>Mobile:</strong></div>
+                                <div class="col-sm-8">{{ employee.mobile }}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-4"><strong>Department:</strong></div>
+                                <div class="col-sm-8">{{ employee.department.name }}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-4"><strong>Position:</strong></div>
+                                <div class="col-sm-8">{{ employee.position.name }}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-4"><strong>Date of Birth:</strong></div>
+                                <div class="col-sm-8">{{ employee.gregorian_date_of_birth }}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-4"><strong>Date of Hire:</strong></div>
+                                <div class="col-sm-8">{{ employee.gregorian_hire_date }}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-4"><strong>Salary:</strong></div>
+                                <div class="col-sm-8">{{ employee.salary }}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-4"><strong>Education Level:</strong></div>
+                                <div class="col-sm-8">{{ employee.education_level }}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-4"><strong>Address:</strong></div>
+                                <div class="col-sm-8">{{ employee.address }}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-4"><strong>Pension Number:</strong></div>
+                                <div class="col-sm-8">{{ employee.pension_number }}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-4"><strong>Emergency Contact:</strong></div>
+                                <div class="col-sm-8">
+                                    <p><strong>Name:</strong> {{ employee.emergency_contact_name }}</p>
+                                    <p><strong>Phone:</strong> {{ employee.emergency_contact_phone }}</p>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-4"><strong>COC Certified:</strong></div>
+                                <div class="col-sm-8">{% if employee.is_coc_certified %}Yes{% else %}No{% endif %}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5>Documents</h5>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <a href="{% url 'hrms:document_create_employee' employee_id=employee.pk %}" class="btn btn-outline-primary">Upload New Document</a>
+                                </div>
+                            </div>
+                            {% if documents %}
+                                <ul>
+                                    {% for document in documents %}
+                                    <li>
+                                        <a href="{{ document.file.url }}" target="_blank">{{ document.get_name_display }}</a>
+                                        <p><strong>Description:</strong> {{ document.description }}</p>
+                                        <p><strong>Date Uploaded:</strong> {{ document.date_uploaded }}</p>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>No documents associated with this employee.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="card-footer text-muted text-center">
+                    {% if previous_employee %}
+                        <a href="{% url 'hrms:employee_detail' previous_employee.id %}" class="btn btn-outline-secondary" style="margin-right: 10px;"><</a>
+                    {% endif %}
+                    {% if next_employee %}
+                        <a href="{% url 'hrms:employee_detail' next_employee.id %}" class="btn btn-outline-secondary">></a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'store_base.html' %}
+
+{% block title %}Suppliers List{% endblock %}
+
+{% block content %}
+<h1>Suppliers</h1>
+<a href="{% url 'supplier_create' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Add New Supplier</a>
+<table class="mt-3">
+    <tr>
+        <th>Supplier Name</th>
+        <th>Contact Person</th>
+        <th>Phone Number</th>
+        <th>Address</th>
+        <th>TIN Number</th>
+        <th>Action</th>
+    </tr>
+    {% for supplier in suppliers %}
+    <tr>
+        <td>{{ supplier.name }}</td>
+        <td>{{ supplier.contact_person }}</td>
+        <td>{{ supplier.phone_number }}</td>
+        <td>{{ supplier.address }}</td>
+        <td>{{ supplier.tin_number }}</td>
+        <td>
+            <a href="{% url 'supplier_edit' supplier.pk %}" class="btn btn-warning btn-sm">Edit</a>
+            <a href="{% url 'supplier_delete' supplier.pk %}" class="btn btn-danger btn-sm">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

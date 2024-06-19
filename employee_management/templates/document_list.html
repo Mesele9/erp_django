@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Document List{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h3>Document List</h3>
+
+    <!-- Search Form -->
+    <form method="GET" action="{% url 'hrms:document_list' %}">
+        <input type="text" name="search_query" placeholder="Search by name...">
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Upload Document Form and Button -->
+    <div class="mt-4 mb-4">
+        <a href="{% url 'hrms:document_upload_form' %}" class="btn btn-outline-primary">Upload Document</a>
+    </div>
+
+    <!-- Document Table -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Employee</th>
+                <th>Date Uploaded</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for document in page_obj %}
+                <tr>
+                    <td>{{ document.get_name_display }}</td>
+                    <td>{{ document.employee }}</td>
+                    <td>{{ document.date_uploaded }}</td>
+                    <td>
+                        <a href="{% url 'hrms:document_update' document.pk %}" class="btn btn-sm btn-outline-primary" style="margin-right: 10px;">Edit</a>
+                        <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('{{ document.name }}', '{{ document.pk }}')">Delete</button>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">No documents found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if page_obj.has_other_pages %}
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    {% endif %}
+</div>
+
+<!-- JavaScript for Delete Confirmation -->
+<script>
+    function confirmDelete(name, pk) {
+        if (confirm(`Are you sure you want to delete the document "${name}"?`)) {
+            window.location.href = `/documents/delete/${pk}/`;
+        }
+    }
+</script>
+{% endblock %}

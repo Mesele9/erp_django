@@ -1,0 +1,49 @@
+{% extends 'store_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Purchase Records{% endblock %}
+
+{% block content %}
+<h1>Purchase Records</h1>
+
+<form method="get" class="mb-3">
+    <div class="form-row">
+        <div class="col">
+            {{ form.voucher_number|as_crispy_field }}
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+    </div>
+</form>
+
+<a href="{% url 'purchase_record_create' %}" class="btn btn-primary mb-3"><i class="fas fa-plus"></i> Add New Purchase Record</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Voucher Number</th>
+            <th>Supplier</th>
+            <th>Purchaser</th>
+            <th>Total Value</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for purchase_record in purchase_records %}
+        <tr>
+            <td>{{ purchase_record.date }}</td>
+            <td><a href="{% url 'purchase_record_detail' purchase_record.pk %}">{{ purchase_record.voucher_number }}</a></td>
+            <td>{{ purchase_record.supplier }}</td>
+            <td>{{ purchase_record.purchaser }}</td>
+            <td>{{ purchase_record.total_value }}</td>
+            <td>
+                <a href="{% url 'purchase_record_edit' purchase_record.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'purchase_record_delete' purchase_record.pk %}" class="btn btn-danger btn-sm ml-2">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

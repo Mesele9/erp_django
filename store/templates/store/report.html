@@ -1,0 +1,43 @@
+<!-- templates/inventory/report.html -->
+{% extends 'store_base.html' %}
+
+{% block title %}Generated Report{% endblock %}
+
+{% block content %}
+<h1>Generated Report</h1>
+
+<form method="get">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">View Report</button>
+</form>
+
+{% if report_data %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Transaction Type</th>
+            <th>Details</th>
+            <th>Department</th>
+            <th>Supplier</th>
+            <!-- Add more columns as needed -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in report_data %}
+        <tr>
+            <td>{{ record.date }}</td>
+            <td>{{ record.get_transaction_type }}</td>
+            <td>{{ record.voucher_number }}</td>
+            <td>{{ record.department }}</td>
+            <td>{{ record.supplier }}</td>
+            <!-- Add more columns as needed -->
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No records found based on selected criteria.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "store_base.html" %}
+
+{% block content %}
+  <h2>New Purchase Record</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ formset.management_form }}
+    <h3>Items</h3>
+    <div id="formset-container">
+      {% for form in formset %}
+        <div class="formset-item">
+          {{ form.as_p }}
+          <button type="button" class="remove-item">Remove</button>
+        </div>
+      {% endfor %}
+    </div>
+    <button type="button" id="add-item">Add Item</button>
+    <button type="submit">Save</button>
+  </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      let formsetContainer = document.getElementById('formset-container');
+      let addItemButton = document.getElementById('add-item');
+      let totalForms = document.querySelector('#id_items-TOTAL_FORMS');
+      let formsetPrefix = 'items';
+
+      function updateElementIndex(el, prefix, index) {
+        let idRegex = new RegExp('(' + prefix + '-\\d+-)');
+        let replacement = prefix + '-' + index + '-';
+        if (el.getAttribute('for')) el.setAttribute('for', el.getAttribute('for').replace(idRegex, replacement));
+        if (el.id) el.id = el.id.replace(idRegex, replacement);
+        if (el.name) el.name = el.name.replace(idRegex, replacement);
+      }
+
+      function addForm(formsetContainer, formsetPrefix) {
+        let newFormIndex = formsetContainer.children.length;
+        let newForm = document.createElement('div');
+        newForm.classList.add('formset-item');
+        newForm.innerHTML = formsetContainer.children[0].innerHTML.replace(/__prefix__/g, newFormIndex);
+        formsetContainer.appendChild(newForm);
+        totalForms.value = formsetContainer.children.length;
+        let formFields = newForm.querySelectorAll('input, select, textarea, button');
+        formFields.forEach(function(field) {
+          updateElementIndex(field, formsetPrefix, newFormIndex);
+        });
+        newForm.querySelector('.remove-item').addEventListener('click', function() {
+          newForm.remove();
+          updateTotalForms();
+        });
+      }
+
+      function updateTotalForms() {
+        totalForms.value = formsetContainer.children.length;
+        let formsetItems = formsetContainer.querySelectorAll('.formset-item');
+        formsetItems.forEach((form, index) => {
+          let formFields = form.querySelectorAll('input, select, textarea, button');
+          formFields.forEach((field) => {
+            updateElementIndex(field, formsetPrefix, index);
+          });
+        });
+      }
+
+      addItemButton.addEventListener('click', function() {
+        addForm(formsetContainer, formsetPrefix);
+      });
+
+      document.querySelectorAll('.remove-item').forEach(button => {
+        button.addEventListener('click', function() {
+          button.parentElement.remove();
+          updateTotalForms();
+        });
+      });
+    });
+  </script>
+{% endblock %}

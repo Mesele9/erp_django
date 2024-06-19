@@ -1,0 +1,51 @@
+{% extends 'store_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Issue Records{% endblock %}
+
+{% block content %}
+<h1>Issue Records</h1>
+
+<form method="get" class="mb-3">
+    <div class="form-row">
+        <div class="col">
+            {{ form.voucher_number|as_crispy_field }}
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+    </div>
+</form>
+
+<a href="{% url 'issue_record_create' %}" class="btn btn-primary mb-3"><i class="fas fa-plus"></i> Add New Issue Record</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Voucher Number</th>
+            <th>Department</th>
+            <th>Issued By</th>
+            <th>Received By</th>
+            <th>Total Value</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for issue_record in issue_records %}
+        <tr>
+            <td>{{ issue_record.date }}</td>
+            <td><a href="{% url 'issue_record_detail' issue_record.pk %}">{{ issue_record.voucher_number }}</a></td>
+            <td>{{ issue_record.department }}</td>
+            <td>{{ issue_record.issued_by }}</td>
+            <td>{{ issue_record.received_by }}</td>
+            <td>{{ issue_record.total_value }}</td>
+            <td>
+                <a href="{% url 'issue_record_edit' issue_record.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'issue_record_delete' issue_record.pk %}" class="btn btn-danger btn-sm ml-2">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

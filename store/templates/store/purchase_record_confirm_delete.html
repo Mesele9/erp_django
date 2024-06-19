@@ -1,0 +1,14 @@
+{% extends "store_base.html" %}
+
+{% block title %}Confirm Deletion of Purchase Record {% endblock %}
+
+{% block content %}
+  <h1>Confirm Deletion</h1>
+  <p>Are you sure you want to delete Purchase Record {{ purchase_record.id }}?</p>
+  
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="{% url 'purchase_record_list' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

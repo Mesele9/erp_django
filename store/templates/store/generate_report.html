@@ -1,0 +1,52 @@
+<!-- templates/inventory/generate_report.html -->
+{% extends 'store_base.html' %}
+
+{% block title %}Generate Report{% endblock %}
+
+{% block content %}
+<h1>Generate Report</h1>
+
+<form method="get" class="mb-3">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">View Report</button>
+</form>
+
+{% if report_data %}
+    <h2>Report Results</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                {% if form.cleaned_data.transaction_type == 'purchase' %}
+                    <th>Date</th>
+                    <th>Supplier</th>
+                    <th>Total Amount Spent</th>
+                {% elif form.cleaned_data.transaction_type == 'issue' %}
+                    <th>Date</th>
+                    <th>Department</th>
+                    <th>Total Quantity Issued</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% if form.cleaned_data.transaction_type == 'purchase' %}
+                {% for record in report_data %}
+                    <tr>
+                        <td>{{ record.date }}</td>
+                        <td>{{ record.supplier }}</td>
+                        <td>{{ record.total_spent }}</td>
+                    </tr>
+                {% endfor %}
+            {% elif form.cleaned_data.transaction_type == 'issue' %}
+                {% for record in report_data %}
+                    <tr>
+                        <td>{{ record.date }}</td>
+                        <td>{{ record.department }}</td>
+                        <td>{{ record.total_quantity }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}

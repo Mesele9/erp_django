@@ -1,0 +1,57 @@
+<!-- templates/inventory/item_list.html -->
+{% extends 'store_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Item List{% endblock %}
+
+{% block content %}
+<h1>Inventory Items</h1>
+<a href="{% url 'item_create' %}" class="btn btn-primary mb-3"><i class="fas fa-plus"></i> Add New Item</a>
+
+<form method="get" class="mb-3">
+    <div class="form-row">
+        <div class="col">
+            {{ form.description|as_crispy_field }}
+        </div>
+        <div class="col">
+            {{ form.category|as_crispy_field }}
+        </div>
+        <div class="col">
+            {{ form.subcategory|as_crispy_field }}
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Subcategory</th>
+            <th>Unit of Measurement</th>
+            <th>Current Unit Price</th>
+            <th>Stock Balance</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.description }}</td>
+            <td>{{ item.category }}</td>
+            <td>{{ item.subcategory }}</td>
+            <td>{{ item.unit_of_measurement }}</td>
+            <td>{{ item.current_unit_price }}</td>
+            <td>{{ item.stock_balance }}</td>
+            <td>
+                <a href="{% url 'item_edit' item.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'item_delete' item.pk %}" class="btn btn-danger btn-sm ml-2">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
