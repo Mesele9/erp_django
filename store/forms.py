@@ -14,11 +14,11 @@ class SupplierForm(forms.ModelForm):
 
 class ItemForm(forms.ModelForm):
     category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label='Select Category', required=True)
-    sub_category = forms.ModelChoiceField(queryset=Subcategory.objects.all(), empty_label='Select Subcategory', required=False)
+    subcategory = forms.ModelChoiceField(queryset=Subcategory.objects.all(), empty_label='Select Subcategory', required=False)
 
     class Meta:
         model = Item
-        fields = ['description', 'category', 'sub_category', 'unit_of_measurement', 'current_unit_price', 'stock_balance', 'minimum_stock']
+        fields = ['description', 'category', 'subcategory', 'unit_of_measurement', 'current_unit_price', 'stock_balance', 'minimum_stock']
 
 
 class PurchaseRecordForm(forms.ModelForm):

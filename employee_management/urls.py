@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 from django.conf.urls.static import static
 from django.urls import path
 from .views import (
-    home, employee_list, employee_create, employee_update, employee_delete, employee_detail,
+    employee_list, employee_create, employee_update, employee_delete, employee_detail,
     department_list, department_create, department_update, department_delete, hr_dashboard,
     position_list, position_create, position_update, position_delete, 
     document_list, document_create, document_update, document_delete, document_upload_form,

@@ -26,16 +26,21 @@ class EmployeeForm(forms.ModelForm):
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
             'middle_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Middle Name'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
+            'gender': forms.RadioSelect(),
             'mobile': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Mobile No'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
-            'salary': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Basic Salary'}),
-            #'address': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address'}),
+            'department': forms.Select(attrs={'class': 'form-control'}),
+            'position': forms.Select(attrs={'class': 'form-control'}),
+            'date_of_birth': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'hire_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'salary': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Basic Salary'}),
+            'education_level': forms.Select(attrs={'class': 'form-control'}),
+            'address': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Employee Address', 'rows':2}),
+            'pension_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Pension Number'}),
             'emergency_contact_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Emergency Contact Name'}),
             'emergency_contact_phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Emergency Contact Phone'}),
-            'gender': forms.RadioSelect(),
-            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
-            'hire_date': forms.DateInput(attrs={'type': 'date'}),
-            'address': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Employee Address', 'rows': 2}),
+            'is_coc_certified': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'picture': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
@@ -45,8 +50,9 @@ class DocumentForm(forms.ModelForm):
         model = Document
         fields = ['name', 'file', 'description', 'employee']
         widgets = {
+            'name': forms.Select(attrs={'class': 'form-control'}),
             'file': forms.FileInput(attrs={'class': 'form-control-file'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'employee': forms.Select(attrs={'class': 'form-control'}),
         }
 

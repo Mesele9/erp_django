@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.forms import DecimalField, FloatField
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -6,6 +7,7 @@ from .models import Item, PurchaseRecord, PurchaseRecordItem, IssueRecord, Issue
 from .forms import IssueRecordFilterForm, IssueReportForm, ItemForm, ItemFilterForm, ItemsIssuedReportForm, ItemsPurchasedReportForm, PurchaseRecordFilterForm, PurchaseRecordForm, PurchaseRecordItemFormSet, IssueRecordForm, IssueRecordItemFormSet, PurchaseReportForm, ReportForm, SupplierForm
 
 
+@login_required
 def store_dashboard(request):
     #items = Item.objects.all()
     recent_purchase_records = PurchaseRecord.objects.order_by('-date')[:5]
@@ -27,6 +29,7 @@ def get_subcategories(request):
     return JsonResponse(list(subcategories.values('id', 'name')), safe=False)
 
 
+@login_required
 def supplier_list(request):
     suppliers = Supplier.objects.all()
     return render(request, 'store/supplier_list.html', {'suppliers': suppliers})
@@ -59,7 +62,7 @@ def supplier_delete(request, pk):
         return redirect('supplier_list')
     return render(request, 'store/supplier_confirm_delete.html', {'supplier': supplier})
 
-
+@login_required
 def item_list(request):
     form = ItemFilterForm(request.GET or None)
     items = Item.objects.all()

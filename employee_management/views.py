@@ -1,39 +1,19 @@
-import re
 from django.contrib import messages
-from django.contrib.auth.decorators  import login_required, permission_required
+from django.contrib.auth.decorators  import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db import IntegrityError
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login as auth_login
 from django.db.models import Count
-from django.utils import timezone
 from datetime import datetime
 from .models import Employee, Department, Position, Document
 from .forms import EmployeeForm, DepartmentForm, PositionForm, DocumentForm
 from .utils import is_upcoming_birthday, calculate_service_duration
 
 
-def home(request):
-    if request.user.is_authenticated:
-        # Get the user's full name
-        full_name = request.user.get_full_name() if request.user.get_full_name() else request.user.username
-        print(full_name)
-        # Get the current date in a formatted string
-        today_date = datetime.today().strftime("%B %d, %Y")
-
-        # Render the home template with user data and today's date
-        return render(request, 'home.html', {'user': request.user, 'today_date': today_date})
-    else:
-        # Render the home template without user data if not authenticated
-        return render(request, 'home.html', {'user': None})
-
-
 @login_required
 def hr_dashboard(request):
     # Total number of employees
-    active_employees = Employee.objects.filter(is_active=True)
-    total_employees = Employee.objects.filter(is_active=True).count()
+    active_employees = Employee.objects.filter(is_active=True).select_related('department').prefetch_related('position')
+    total_employees = active_employees.count()
 
     # Employees by department
     department_data = active_employees.values('department__name').annotate(employee_count=Count('id'))
@@ -121,60 +101,6 @@ def employee_list(request):
         'search_query': search_query,
         'department_filter': department_filter,
         'education_filter': education_filter,
-        'is_paginated': True,
-    }
-
-    return render(request, 'employee_list.html', context)
-
-
-def employee_list2(request):
-    all_employees = Employee.objects.all().order_by('id')
-    active_employees = all_employees.filter(is_active=True)
-    inactive_employees = all_employees.filter(is_active=False)
-    departments = Department.objects.all()
-
-    status_filter = request.GET.get('status', 'active')
-    if status_filter == 'inactive':
-        employees = inactive_employees
-    elif status_filter == 'all':
-        employees = all_employees
-    else:
-        employees = active_employees
-
-    # Search functionality
-    search_query = request.GET.get('q')
-    if search_query:
-        employees = employees.filter(first_name__icontains=search_query)
-
-    # Department filter
-    department_filter = request.GET.get('department')
-    if department_filter:
-        employees = employees.filter(department_id=department_filter)
-
-    # Collect Employee period of service from the 
-    for employee in employees:
-        ethiopian_hire_date = employee.hire_date
-        if ethiopian_hire_date:
-            employee.period_of_service = calculate_service_duration(ethiopian_hire_date)
-        else:
-            employee.period_of_service = "N/A"
-
-    # paginator
-    paginator = Paginator(employees, 10)  # Show 10 employees per page
-    page_number = request.GET.get('page')
-    try:
-        page_obj = paginator.get_page(page_number)
-    except PageNotAnInteger:
-        page_obj = paginator.get_page(1)
-    except EmptyPage:
-        page_obj = paginator.get_page(paginator.num_pages)
-
-    context = {
-        'employees': page_obj,
-        'departments': departments,
-        'status_filter': status_filter,
-        'search_query': search_query,
-        'department_filter': department_filter,
         'is_paginated': True,
     }
 
@@ -347,6 +273,7 @@ def document_list(request):
     return render(request, 'document_list.html', {'page_obj': page_obj, 'employee': employee})
 
 
+@login_required
 def document_create(request, employee_id=None):
     if employee_id:
         employee = Employee.objects.get(pk=employee_id)

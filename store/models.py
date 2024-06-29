@@ -1,4 +1,5 @@
 from django.db import models
+from employee_management.models import Department
 from django.utils import timezone
 
 
@@ -7,7 +8,7 @@ class Supplier(models.Model):
     contact_person = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=20)
     address = models.CharField(max_length=250)
-    tin_number = models.CharField(max_length=10)
+    tin_number = models.CharField(max_length=10, unique=True)
     
     def __str__(self):
         return self.name
@@ -26,36 +27,36 @@ class Subcategory(models.Model):
         unique_together = ('name', 'category')
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.category.name} - {self.name}"
 
 
 class Item(models.Model):
 
     UNIT_OF_MEASUREMENT_CHOICES = [
-        ('Piece', 'Piece'),
-        ('Kilogram', 'Kilogram'),
-        ('Gram', 'Gram'),
-        ('Liter', 'Liter'),
-        ('Milliliter', 'Milliliter'),
-        ('Bottle', 'Bottle'),
-        ('Crate', 'Crate'),
-        ('Pack', 'Pack'),
-        ('Box', 'Box'),
-        ('Bag', 'Bag'),
-        ('Dozen', 'Dozen'),
-        ('Meter', 'Meter'),
-        ('Centimeter', 'Centimeter'),
-        ('Square Meter', 'Square Meter'),
-        ('Cubic Meter', 'Cubic Meter'),
+        ('pcs', 'Piece'),
+        ('kg', 'Kilogram'),
+        ('gm', 'Gram'),
+        ('lt', 'Liter'),
+        ('bot', 'Bottle'),
+        ('carton', 'Carton'),
+        ('crate', 'Crate'),
+        ('pac', 'Pack'),
+        ('box', 'Box'),
+        ('keg', 'Keg'),
+        ('dz', 'Dozen'),
+        ('m', 'Meter'),
     ]
     
     description = models.CharField(max_length=255, db_index=True)
     unit_of_measurement = models.CharField(max_length=50, choices=UNIT_OF_MEASUREMENT_CHOICES)
     category = models.ForeignKey(Category, related_name='items', on_delete=models.CASCADE, db_index=True)
     subcategory = models.ForeignKey(Subcategory, related_name='items', on_delete=models.CASCADE, null=True, blank=True, db_index=True)
-    current_unit_price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock_balance = models.IntegerField()
-    minimum_stock = models.IntegerField()
+    current_unit_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
+    stock_balance = models.PositiveIntegerField(default=0)
+    minimum_stock = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     
     def __str__(self):
         return self.description
@@ -114,7 +115,7 @@ class PurchaseRecordItem(models.Model):
 
 class IssueRecord(models.Model):
     date = models.DateField(default=timezone.now)
-    department = models.CharField(max_length=255, db_index=True)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, db_index=True)
     issued_by = models.CharField(max_length=100)
     received_by = models.CharField(max_length=100)
     voucher_number = models.CharField(max_length=50, unique=True, null=True, db_index=True)

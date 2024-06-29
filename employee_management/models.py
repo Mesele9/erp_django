@@ -1,11 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
-from datetime import date
 from .utils import document_upload_to
 from ethiopian_date import EthiopianDateConverter
-from django.utils import timezone
-from datetime import timedelta, datetime, date
-from dateutil.relativedelta import relativedelta
 
 class Department(models.Model):
     name = models.CharField(max_length=50)
@@ -91,10 +86,10 @@ class Document(models.Model):
         ('first_warning', 'First Warning'),
         ('second_warning', 'Second Warning'),
         ('third_warning', 'Third Warning'),
-        ('final_warning', 'Second Warning'),
+        ('final_warning', 'Final Warning'),
         ('termination', 'Termination Letter'),    
     )
-    name = models.CharField(max_length=100, choices=NAME_CHOICES)
+    name = models.CharField(max_length=50, choices=NAME_CHOICES)
     file = models.FileField(upload_to=document_upload_to)
     description = models.TextField(blank=True)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
