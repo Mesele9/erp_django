@@ -27,7 +27,7 @@ class Subcategory(models.Model):
         unique_together = ('name', 'category')
 
     def __str__(self):
-        return f"{self.category.name} - {self.name}"
+        return f"{self.name}"
 
 
 class Item(models.Model):
@@ -48,10 +48,10 @@ class Item(models.Model):
     ]
     
     description = models.CharField(max_length=255, db_index=True)
-    unit_of_measurement = models.CharField(max_length=50, choices=UNIT_OF_MEASUREMENT_CHOICES)
     category = models.ForeignKey(Category, related_name='items', on_delete=models.CASCADE, db_index=True)
     subcategory = models.ForeignKey(Subcategory, related_name='items', on_delete=models.CASCADE, null=True, blank=True, db_index=True)
-    current_unit_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
+    unit_of_measurement = models.CharField(max_length=50, choices=UNIT_OF_MEASUREMENT_CHOICES)
+    current_unit_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     stock_balance = models.PositiveIntegerField(default=0)
     minimum_stock = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)

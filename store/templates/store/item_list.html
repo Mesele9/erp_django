@@ -31,8 +31,8 @@
             <th>Description</th>
             <th>Category</th>
             <th>Subcategory</th>
-            <th>Unit of Measurement</th>
-            <th>Current Unit Price</th>
+            <th>UOM</th>
+            <th>Unit Price</th>
             <th>Stock Balance</th>
             <th>Action</th>
         </tr>
@@ -48,7 +48,7 @@
             <td>{{ item.stock_balance }}</td>
             <td>
                 <a href="{% url 'item_edit' item.pk %}" class="btn btn-warning btn-sm">Edit</a>
-                <a href="{% url 'item_delete' item.pk %}" class="btn btn-danger btn-sm ml-2">Delete</a>
+                <a href="{% url 'item_delete' item.pk %}" class="btn btn-danger btn-sm ml-1">Delete</a>
             </td>
         </tr>
         {% endfor %}
