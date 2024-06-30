@@ -1,12 +1,15 @@
 {% extends 'store_base.html' %}
-
+{% load crispy_forms_tags %}
 {% block title %}Supplier Form{% endblock %}
 
 {% block content %}
+  <div class="container col-md-6">
   <h2>{% if form.instance.pk %}Edit Supplier{% else %}New Supplier{% endif %}</h2>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form|crispy }}
     <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Update{% else %}Create{% endif %}</button>
+    <a href="{% url 'supplier_list' %}" class="btn btn-secondary" style="margin-left: 0.25em;">Cancel</a>
   </form>
+  </div>
 {% endblock %}

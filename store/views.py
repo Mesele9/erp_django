@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F, Sum, Q, Avg
 from .models import Item, PurchaseRecord, PurchaseRecordItem, IssueRecord, IssueRecordItem, Subcategory, Supplier
-from .forms import IssueRecordFilterForm, IssueReportForm, ItemForm, ItemFilterForm, ItemsIssuedReportForm, ItemsPurchasedReportForm, PurchaseRecordFilterForm, PurchaseRecordForm, PurchaseRecordItemFormSet, IssueRecordForm, IssueRecordItemFormSet, PurchaseReportForm, ReportForm, SupplierForm
+from .forms import IssueRecordFilterForm, IssueReportForm, ItemForm, ItemFilterForm, ItemsIssuedReportForm, ItemsPurchasedReportForm, PurchaseRecordFilterForm, PurchaseRecordForm, PurchaseRecordItemFormSet, IssueRecordForm, IssueRecordItemFormSet, PurchaseReportForm, ReportForm, SupplierForm, SupplierFilterForm
 
 
 @login_required
@@ -31,8 +31,16 @@ def get_subcategories(request):
 
 @login_required
 def supplier_list(request):
+    form = SupplierFilterForm(request.GET or None)
     suppliers = Supplier.objects.all()
-    return render(request, 'store/supplier_list.html', {'suppliers': suppliers})
+
+    if form.is_valid():
+        if form.cleaned_data['name']:
+            suppliers = suppliers.filter(name__icontains=form.cleaned_data['name'])
+        if form.cleaned_data['tin_number']:
+            suppliers = suppliers.filter(tin_number=form.cleaned_data['tin_number'])
+
+    return render(request, 'store/supplier_list.html', {'suppliers': suppliers, 'form': form})
 
 def supplier_create(request):
     if request.method == 'POST':

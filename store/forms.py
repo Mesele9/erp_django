@@ -68,16 +68,28 @@ IssueRecordItemFormSet = inlineformset_factory(
 
 
 class ItemFilterForm(forms.Form):
-    description = forms.CharField(required=False, label='Description')
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False, label='Category')
-    subcategory = forms.ModelChoiceField(queryset=Subcategory.objects.all(), required=False, label='Subcategory')
-
+    description = forms.CharField(required=False, label=False, 
+        widget=forms.TextInput(attrs={'placeholder': 'Description'}))
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False, label=False,
+        empty_label='Select Category',
+        widget=forms.Select(attrs={'placeholder': 'Category'}))
+    subcategory = forms.ModelChoiceField(queryset=Subcategory.objects.all(), required=False, label=False,
+        empty_label='Select Subcategory', 
+        widget=forms.Select(attrs={'placeholder': 'Subcategory'}))
+    
 class PurchaseRecordFilterForm(forms.Form):
-    voucher_number = forms.CharField(required=False, label='Voucher Number')
+    voucher_number = forms.CharField(required=False, label=False, 
+        widget=forms.TextInput(attrs={'placeholder': 'Voucher Number'}))
 
 class IssueRecordFilterForm(forms.Form):
-    voucher_number = forms.CharField(required=False, label='Voucher Number')
+    voucher_number = forms.CharField(required=False, label=False, 
+        widget=forms.TextInput(attrs={'placeholder': 'Voucher Number'}))
 
+class SupplierFilterForm(forms.Form):
+    name = forms.CharField(required=False, label=False, 
+        widget=forms.TextInput(attrs={'placeholder': 'Supplier Name'}))
+    tin_number = forms.CharField(required=False, label=False, 
+        widget=forms.TextInput(attrs={'placeholder': 'Tin Number'}))
 
 class ReportForm(forms.Form):
     TRANSACTION_CHOICES = [
