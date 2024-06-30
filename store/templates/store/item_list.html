@@ -34,7 +34,7 @@
             <th>UOM</th>
             <th>Unit Price</th>
             <th>Stock Balance</th>
-            <th>Action</th>
+            <th style="width: 140px;">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -47,8 +47,8 @@
             <td>{{ item.current_unit_price }}</td>
             <td>{{ item.stock_balance }}</td>
             <td>
-                <a href="{% url 'item_edit' item.pk %}" class="btn btn-warning btn-sm">Edit</a>
-                <a href="{% url 'item_delete' item.pk %}" class="btn btn-danger btn-sm ml-1">Delete</a>
+                <a href="{% url 'item_edit' item.pk %}" class="btn btn-warning btn-sm mr-1">Edit</a>
+                <a href="{% url 'item_delete' item.pk %}" class="btn btn-danger btn-sm">Delete</a>
             </td>
         </tr>
         {% endfor %}

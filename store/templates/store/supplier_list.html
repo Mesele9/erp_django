@@ -6,6 +6,8 @@
 {% block content %}
 <h1>Suppliers</h1>
 
+<a href="{% url 'supplier_create' %}" class="btn btn-primary mb-3"><i class="fas fa-plus"></i> Add New Supplier</a>
+
 <form method="get" class="mb-3">
     <div class="form-row">
         <div class="col">
@@ -20,8 +22,7 @@
     </div>
 </form>
 
-<a href="{% url 'supplier_create' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Add New Supplier</a>
-<table class="mt-3">
+<table class="table table-striped">
     <tr>
         <th>Supplier Name</th>
         <th>Contact Person</th>
