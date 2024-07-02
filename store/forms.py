@@ -78,10 +78,14 @@ class ItemFilterForm(forms.Form):
         widget=forms.Select(attrs={'placeholder': 'Subcategory'}))
     
 class PurchaseRecordFilterForm(forms.Form):
+    date_from = forms.DateField(label=False, required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    date_to = forms.DateField(label=False, required=False, widget=forms.DateInput(attrs={'type': 'date'}))
     voucher_number = forms.CharField(required=False, label=False, 
         widget=forms.TextInput(attrs={'placeholder': 'Voucher Number'}))
 
 class IssueRecordFilterForm(forms.Form):
+    date_from = forms.DateField(label=False, required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    date_to = forms.DateField(label=False, required=False, widget=forms.DateInput(attrs={'type': 'date'}))
     voucher_number = forms.CharField(required=False, label=False, 
         widget=forms.TextInput(attrs={'placeholder': 'Voucher Number'}))
 

@@ -1,5 +1,4 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.forms import DecimalField, FloatField
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F, Sum, Q, Avg
@@ -37,9 +36,7 @@ def supplier_list(request):
     if form.is_valid():
         if form.cleaned_data['name']:
             suppliers = suppliers.filter(name__icontains=form.cleaned_data['name'])
-        if form.cleaned_data['tin_number']:
-            suppliers = suppliers.filter(tin_number=form.cleaned_data['tin_number'])
-
+        
     return render(request, 'store/supplier_list.html', {'suppliers': suppliers, 'form': form})
 
 def supplier_create(request):
@@ -118,12 +115,15 @@ def item_delete(request, pk):
 def purchase_record_list(request):
     form = PurchaseRecordFilterForm(request.GET or None)
     purchase_records = PurchaseRecord.objects.all()
-    for p in purchase_records:
-        print(p.total_value)
 
     if form.is_valid():
+        if form.cleaned_data['date_from']:
+            purchase_records = purchase_records.filter(date__gte=form.cleaned_data['date_from'])
+        if form.cleaned_data['date_to']:
+            purchase_records = purchase_records.filter(date__lte=form.cleaned_data['date_to'])
         if form.cleaned_data['voucher_number']:
             purchase_records = purchase_records.filter(voucher_number__icontains=form.cleaned_data['voucher_number'])
+
 
     return render(request, 'store/purchase_record_list.html', {'purchase_records': purchase_records, 'form': form})
 
@@ -180,6 +180,10 @@ def issue_record_list(request):
     issue_records = IssueRecord.objects.all()
 
     if form.is_valid():
+        if form.cleaned_data['date_from']:
+            issue_records = issue_records.filter(date__gte=form.cleaned_data['date_from'])
+        if form.cleaned_data['date_to']:
+            issue_records = issue_records.filter(date__lte=form.cleaned_data['date_to'])
         if form.cleaned_data['voucher_number']:
             issue_records = issue_records.filter(voucher_number__icontains=form.cleaned_data['voucher_number'])
 
