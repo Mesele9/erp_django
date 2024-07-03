@@ -7,10 +7,20 @@ from datetime import datetime
 # Resource class for Employee import/export
 class EmployeeResource(resources.ModelResource):
 
+    department = fields.Field(column_name='department')
+    position = fields.Field(column_name='position')
+
     class Meta:
         model = Employee
         fields = ('id', 'first_name', 'middle_name', 'last_name', 'gender', 'department', 'position', 'date_of_birth', 'hire_date', 'salary', 'education_level', 'address', 'pension_number', 'emergency_contact_name','emergency_contact_phone', 'is_coc_certified', 'is_active', 'picture')
+        export_order = ('id', 'first_name', 'middle_name', 'last_name', 'gender', 'department', 'position', 'date_of_birth', 'hire_date', 'salary', 'education_level', 'address', 'pension_number', 'emergency_contact_name','emergency_contact_phone', 'is_coc_certified', 'is_active', 'picture')
         import_id_fields = ('id',)
+
+    def dehydrate_department(self, employee):
+        return employee.department.name if employee.department else ''
+
+    def dehydrate_position(self, employee):
+        return employee.position.name if employee.position else ''
 
     def before_import_row(self, row, **kwargs):
         # Convert department name to department ID (handle missing departments)

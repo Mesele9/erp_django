@@ -5,9 +5,19 @@ from import_export import resources, fields
 from .models import Item, Category, Subcategory, PurchaseRecord, PurchaseRecordItem, IssueRecord, IssueRecordItem
 
 class ItemResource(resources.ModelResource):
+    category = fields.Field(column_name='category')
+    subcategory = fields.Field(column_name='subcategory')
+
     class Meta:
         model = Item
         fields = ('id', 'description', 'category', 'subcategory', 'unit_of_measurement', 'current_unit_price', 'stock_balance', 'minimum_stock')
+        export_order = ('id', 'description', 'category', 'subcategory', 'unit_of_measurement', 'current_unit_price', 'stock_balance', 'minimum_stock')
+
+    def dehydrate_category(self, item):
+        return item.category.name if item.category else ''
+
+    def dehydrate_subcategory(self, item):
+        return item.subcategory.name if item.subcategory else ''
 
     def before_import_row(self, row, **kwargs):
         # Convert department name to department ID (handle missing departments)
