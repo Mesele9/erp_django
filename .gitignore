@@ -1,4 +1,6 @@
 # Python
+__pycache__/
+*$py.class
 **/__pycache__
 *.pyc
 db.sqlite3
