@@ -25,6 +25,9 @@ class Subcategory(models.Model):
 
     class Meta:
         unique_together = ('name', 'category')
+        indexes = [
+            models.Index(fields=['name', 'category']),
+        ]
 
     def __str__(self):
         return f"{self.name}"
@@ -62,7 +65,7 @@ class Item(models.Model):
         return self.description
 
 class PurchaseRecord(models.Model):
-    date = models.DateField(default=timezone.now)
+    date = models.DateField(default=timezone.now, db_index=True)
     supplier = models.ForeignKey(Supplier, related_name='supplier', on_delete=models.CASCADE, null=True)
     purchaser = models.CharField(max_length=100)
     voucher_number = models.CharField(max_length=50, unique=True, null=True, db_index=True)
@@ -112,7 +115,7 @@ class PurchaseRecordItem(models.Model):
         return f'{self.quantity} x {self.item.description}'
 
 class IssueRecord(models.Model):
-    date = models.DateField(default=timezone.now)
+    date = models.DateField(default=timezone.now, db_index=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, db_index=True)
     issued_by = models.CharField(max_length=100)
     received_by = models.CharField(max_length=100)
