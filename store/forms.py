@@ -1,6 +1,7 @@
 from django import forms
 from .models import Category, Subcategory, Supplier, Item, PurchaseRecord, PurchaseRecordItem, IssueRecord, IssueRecordItem
 from django.forms.models import inlineformset_factory
+from employee_management.models import Department
 
 class DateInput(forms.DateInput):
     input_type = 'date'
@@ -151,6 +152,32 @@ class IssueReportForm(forms.Form):
 
 
 class ItemsPurchasedReportForm(forms.Form):
+    date_from = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    date_to = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    voucher_number = forms.CharField(required=False)
+    supplier = forms.ModelChoiceField(queryset=Supplier.objects.all(), required=False)
+    description = forms.CharField(required=False)
+
+class ItemsIssuedReportForm(forms.Form):
+    date_from = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    date_to = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    voucher_number = forms.CharField(required=False)
+    department = forms.ModelChoiceField(queryset=Department.objects.all(), required=False)
+    description = forms.CharField(required=False)
+
+
+class SummarizedItemsPurchasedReportForm(forms.Form):
+    date_from = forms.DateField(required=False, widget=forms.TextInput(attrs={'type': 'date'}))
+    date_to = forms.DateField(required=False, widget=forms.TextInput(attrs={'type': 'date'}))
+    supplier = forms.ModelChoiceField(queryset=Supplier.objects.all(), required=False)
+
+class SummarizedItemsIssuedReportForm(forms.Form):
+    date_from = forms.DateField(required=False, widget=forms.TextInput(attrs={'type': 'date'}))
+    date_to = forms.DateField(required=False, widget=forms.TextInput(attrs={'type': 'date'}))
+    department = forms.ModelChoiceField(queryset=Department.objects.all(), required=False)
+
+
+""" class ItemsPurchasedReportForm(forms.Form):
     start_date = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}), required=True)
     end_date = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}), required=True)
     purchaser = forms.CharField(label='Purchaser', max_length=100, required=False)
@@ -166,3 +193,4 @@ class IssueItemReportForm(forms.Form):
     start_date = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}), required=True)
     end_date = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}), required=True)
     department = forms.CharField(required=False)
+ """

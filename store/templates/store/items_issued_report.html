@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Items Issued Report</h2>
+  <form method="get">
+    {{ form.as_p }}
+    <button type="submit">Generate Report</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th>Category</th>
+        <th>Subcategory</th>
+        <th>Date</th>
+        <th>Voucher Number</th>
+        <th>Department</th>
+        <th>Total Quantity</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in report_data %}
+        <tr>
+          <td>{{ item.item__description }}</td>
+          <td>{{ item.item__category__name }}</td>
+          <td>{{ item.item__subcategory__name }}</td>
+          <td>{{ item.issue_record__date }}</td>
+          <td>{{ item.issue_record__voucher_number }}</td>
+          <td>{{ item.issue_record__department }}</td>
+          <td>{{ item.total_quantity }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

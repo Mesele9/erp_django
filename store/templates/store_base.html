@@ -28,8 +28,11 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownReports">
                         <a class="dropdown-item" href="{% url 'purchase_report' %}">Purchase Report</a>
                         <a class="dropdown-item" href="{% url 'issue_report' %}">Issue Report</a>
-                        <a class="dropdown-item" href="{% url 'purchase_items_report' %}">Purchase Item Report</a>
-                        <a class="dropdown-item" href="{% url 'issue_items_report' %}">Issue Item Report</a>
+                        <a class="dropdown-item" href="{% url 'items_purchased_report' %}">Purchase Item Report</a>
+                        <a class="dropdown-item" href="{% url 'items_issued_report' %}">Issue Item Report</a>
+                        <a class="dropdown-item" href="{% url 'summarized_items_purchased_report' %}">Summary Purchase Item Report</a>
+                        <a class="dropdown-item" href="{% url 'summarized_items_issued_report' %}">Summary Issue Item Report</a>
+
                     </div>
                 </li>
             </ul>

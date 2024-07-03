@@ -1,0 +1,38 @@
+{% extends 'store_base.html' %}
+
+{% block content %}
+  <h2>Items Purchased Report</h2>
+  <form method="get">
+    {{ form.as_p }}
+    <button type="submit">Generate Report</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th>Category</th>
+        <th>Subcategory</th>
+        <th>Date</th>
+        <th>Voucher Number</th>
+        <th>Supplier</th>
+        <th>Total Quantity</th>
+        <th>Total Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in report_data %}
+        <tr>
+          <td>{{ item.item__description }}</td>
+          <td>{{ item.item__category__name }}</td>
+          <td>{{ item.item__subcategory__name }}</td>
+          <td>{{ item.purchase_record__date }}</td>
+          <td>{{ item.purchase_record__voucher_number }}</td>
+          <td>{{ item.purchase_record__supplier__name }}</td>
+          <td>{{ item.total_quantity }}</td>
+          <td>{{ item.total_price }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
