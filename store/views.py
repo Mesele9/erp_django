@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F, Sum, Q, Avg
 from .models import Item, PurchaseRecord, PurchaseRecordItem, IssueRecord, IssueRecordItem, Subcategory, Supplier
-from .forms import IssueRecordFilterForm, IssueReportForm, ItemForm, ItemFilterForm, ItemsIssuedReportForm, ItemsPurchasedReportForm, PurchaseRecordFilterForm, PurchaseRecordForm, PurchaseRecordItemFormSet, IssueRecordForm, IssueRecordItemFormSet, PurchaseReportForm, ReportForm, SupplierForm, SupplierFilterForm
+from .forms import IssueRecordFilterForm, IssueReportForm, ItemForm, ItemFilterForm, ItemsIssuedReportForm, ItemsPurchasedReportForm, PurchaseRecordFilterForm, PurchaseRecordForm, PurchaseRecordItemFormSet, IssueRecordForm, IssueRecordItemFormSet, PurchaseReportForm, ReportForm, SummarizedItemsIssuedReportForm, SummarizedItemsPurchasedReportForm, SupplierForm, SupplierFilterForm
 
 
 @login_required
@@ -11,7 +11,7 @@ def store_dashboard(request):
     #items = Item.objects.all()
     recent_purchase_records = PurchaseRecord.objects.order_by('-date')[:5]
     recent_issue_records = IssueRecord.objects.order_by('-date')[:5]
-    low_stock_items = Item.objects.filter(stock_balance__lt=F('minimum_stock'))
+    low_stock_items = Item.objects.filter(stock_balance__lte=F('minimum_stock'))
     
     context = {
         #'items': items,
@@ -278,6 +278,8 @@ def generate_report(request):
 
     return render(request, 'store/report.html', context)
 
+
+
 def purchase_report(request):
     form = PurchaseReportForm(request.GET or None)
     report_data = []
@@ -304,6 +306,7 @@ def purchase_report(request):
 
     return render(request, 'store/purchase_report.html', context)
 
+
 def issue_report(request):
     form = IssueReportForm(request.GET or None)
     report_data = []
@@ -328,81 +331,143 @@ def issue_report(request):
     return render(request, 'store/issue_report.html', context)
 
 
-
-def purchase_items_report(request):
-    form = PurchaseReportForm(request.GET or None)
+def items_purchased_report(request):
+    form = ItemsPurchasedReportForm(request.GET or None)
     report_data = []
 
-    if request.method == 'GET' and form.is_valid():
-        start_date = form.cleaned_data['start_date']
-        end_date = form.cleaned_data['end_date']
-        purchaser = form.cleaned_data['purchaser']
-        supplier = form.cleaned_data['supplier']
+    if form.is_valid():
+        date_from = form.cleaned_data.get('date_from')
+        date_to = form.cleaned_data.get('date_to')
+        voucher_number = form.cleaned_data.get('voucher_number')
+        supplier = form.cleaned_data.get('supplier')
+        description = form.cleaned_data.get('description')
 
-        # Aggregate total quantities for each item
-        purchase_items = PurchaseRecordItem.objects.filter(purchase_record__date__range=(start_date, end_date))
-        if purchaser:
-            purchase_items = purchase_items.filter(purchase_record__purchaser=purchaser)
+        filters = Q()
+        if date_from:
+            filters &= Q(purchase_record__date__gte=date_from)
+        if date_to:
+            filters &= Q(purchase_record__date__lte=date_to)
+        if voucher_number:
+            filters &= Q(purchase_record__voucher_number__icontains=voucher_number)
         if supplier:
-            purchase_items = purchase_items.filter(purchase_record__supplier=supplier)
+            filters &= Q(purchase_record__supplier=supplier)
+        if description:
+            filters &= Q(item__description__icontains=description)
 
-        aggregated_data = purchase_items.values('item__description').annotate(
+        report_data = PurchaseRecordItem.objects.filter(filters).values(
+            'item__description',
+            'item__category__name',
+            'item__subcategory__name',
+            'purchase_record__date',
+            'purchase_record__voucher_number',
+            'purchase_record__supplier__name',
+        ).annotate(
             total_quantity=Sum('quantity'),
-            average_price=Avg('unit_price'),
-            total_value=Sum('quantity') * Avg('unit_price')
+            total_price=Sum('total_price')
         )
 
-        for item_data in aggregated_data:
-            
-            item_description = item_data['item__description']
-            total_quantity = item_data['total_quantity']
-            total_value = item_data['total_value']
-            report_data.append({
-                
-                'item_description': item_description,
-                'total_quantity': total_quantity,
-                'total_value': total_value
-            })
-
-    context = {
+    return render(request, 'store/items_purchased_report.html', {
         'form': form,
         'report_data': report_data,
-    }
-    return render(request, 'store/purchase_items_report.html', context)
+    })
 
-
-def issue_items_report(request):
-    form = IssueReportForm(request.GET or None)
+def items_issued_report(request):
+    form = ItemsIssuedReportForm(request.GET or None)
     report_data = []
 
-    if request.method == 'GET' and form.is_valid():
-        start_date = form.cleaned_data['start_date']
-        end_date = form.cleaned_data['end_date']
-        department = form.cleaned_data['department']
+    if form.is_valid():
+        date_from = form.cleaned_data.get('date_from')
+        date_to = form.cleaned_data.get('date_to')
+        voucher_number = form.cleaned_data.get('voucher_number')
+        department = form.cleaned_data.get('department')
+        description = form.cleaned_data.get('description')
 
-        # Aggregate total quantities for each item
-        issue_items = IssueRecordItem.objects.filter(issue_record__date__range=(start_date, end_date))
+        filters = Q()
+        if date_from:
+            filters &= Q(issue_record__date__gte=date_from)
+        if date_to:
+            filters &= Q(issue_record__date__lte=date_to)
+        if voucher_number:
+            filters &= Q(issue_record__voucher_number__icontains=voucher_number)
         if department:
-            issue_items = issue_items.filter(issue_record__department=department)
+            filters &= Q(issue_record__department__icontains=department)
+        if description:
+            filters &= Q(item__description__icontains=description)
 
-        aggregated_data = issue_items.values('item__description').annotate(
-            total_quantity=Sum('quantity'),
-            average_price=Avg('unit_price'),
-            total_value=Sum('quantity') * Avg('unit_price')
+        report_data = IssueRecordItem.objects.filter(filters).values(
+            'item__description',
+            'item__category__name',
+            'item__subcategory__name',
+            'issue_record__date',
+            'issue_record__voucher_number',
+            'issue_record__department',
+        ).annotate(
+            total_quantity=Sum('quantity')
         )
 
-        for item_data in aggregated_data:
-            item_description = item_data['item__description']
-            total_quantity = item_data['total_quantity']
-            total_value = item_data['total_value']
-            report_data.append({
-                'item_description': item_description,
-                'total_quantity': total_quantity,
-                'total_value': total_value
-            })
-
-    context = {
+    return render(request, 'store/items_issued_report.html', {
         'form': form,
         'report_data': report_data,
-    }
-    return render(request, 'store/issue_items_report.html', context)
+    })
+
+
+def summarized_items_purchased_report(request):
+    form = SummarizedItemsPurchasedReportForm(request.GET or None)
+    report_data = []
+
+    if form.is_valid():
+        date_from = form.cleaned_data.get('date_from')
+        date_to = form.cleaned_data.get('date_to')
+        supplier = form.cleaned_data.get('supplier')
+
+        filters = Q()
+        if date_from:
+            filters &= Q(purchase_record__date__gte=date_from)
+        if date_to:
+            filters &= Q(purchase_record__date__lte=date_to)
+        if supplier:
+            filters &= Q(purchase_record__supplier=supplier)
+
+        report_data = PurchaseRecordItem.objects.filter(filters).values(
+            'item__description',
+            'item__category__name',
+            'item__subcategory__name'
+        ).annotate(
+            total_quantity=Sum('quantity'),
+            total_price=Sum('total_price')
+        )
+
+    return render(request, 'store/summarized_items_purchased_report.html', {
+        'form': form,
+        'report_data': report_data,
+    })
+
+def summarized_items_issued_report(request):
+    form = SummarizedItemsIssuedReportForm(request.GET or None)
+    report_data = []
+
+    if form.is_valid():
+        date_from = form.cleaned_data.get('date_from')
+        date_to = form.cleaned_data.get('date_to')
+        department = form.cleaned_data.get('department')
+
+        filters = Q()
+        if date_from:
+            filters &= Q(issue_record__date__gte=date_from)
+        if date_to:
+            filters &= Q(issue_record__date__lte=date_to)
+        if department:
+            filters &= Q(issue_record__department=department)
+
+        report_data = IssueRecordItem.objects.filter(filters).values(
+            'item__description',
+            'item__category__name',
+            'item__subcategory__name'
+        ).annotate(
+            total_quantity=Sum('quantity')
+        )
+
+    return render(request, 'store/summarized_items_issued_report.html', {
+        'form': form,
+        'report_data': report_data,
+    })
