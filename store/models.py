@@ -52,8 +52,8 @@ class Item(models.Model):
     subcategory = models.ForeignKey(Subcategory, related_name='items', on_delete=models.CASCADE, null=True, blank=True, db_index=True)
     unit_of_measurement = models.CharField(max_length=50, choices=UNIT_OF_MEASUREMENT_CHOICES)
     current_unit_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    stock_balance = models.PositiveIntegerField(default=0)
-    minimum_stock = models.PositiveIntegerField(default=0)
+    stock_balance = models.PositiveIntegerField()
+    minimum_stock = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -67,23 +67,21 @@ class PurchaseRecord(models.Model):
     purchaser = models.CharField(max_length=100)
     voucher_number = models.CharField(max_length=50, unique=True, null=True, db_index=True)
     upload_receipt = models.FileField(upload_to='receipts/', blank=True, null=True)
-    total_value = models.DecimalField(max_digits=15, decimal_places=2, default=0.0)
-
+    
     def __str__(self):
         return f'Purchase Record {self.voucher_number} - {self.date} {self.total_value}'
-    
-    def update_total_value(self):
-        total = sum(item.total_price for item in self.items.all())
-        if total:
-            self.total_value = total
-            self.save()
-    
+
+    @property
+    def total_value(self):
+        return sum(item.total_price for item in self.items.all())
+
     def delete(self, using=None, keep_parents=False):
         for item in self.items.all():
             item.item.stock_balance -= item.quantity
             item.item.save()
         super().delete(using=using, keep_parents=keep_parents)
-
+    
+    
 class PurchaseRecordItem(models.Model):
     purchase_record = models.ForeignKey(PurchaseRecord, related_name='items', on_delete=models.CASCADE, db_index=True)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, db_index=True)
@@ -103,7 +101,7 @@ class PurchaseRecordItem(models.Model):
         self.item.current_unit_price = self.unit_price
         self.item.save()
         super().save(*args, **kwargs)
-        self.purchase_record.update_total_value()
+        self.purchase_record.total_value()
     
     def delete(self, *args, **kwargs):
         self.item.stock_balance -= self.quantity
@@ -119,22 +117,18 @@ class IssueRecord(models.Model):
     issued_by = models.CharField(max_length=100)
     received_by = models.CharField(max_length=100)
     voucher_number = models.CharField(max_length=50, unique=True, null=True, db_index=True)
-    total_value = models.DecimalField(max_digits=15, decimal_places=2, default=0.0)
 
-    def update_total_value(self):
-        total = sum(item.total_price for item in self.items.all())
-        if total:
-            self.total_value = total
-            self.save()
+    def total_value(self):
+        return sum(item.total_price for item in self.items.all())
 
     def __str__(self):
         return f'Issue Record {self.voucher_number} - {self.date} {self.total_value}'
     
     def delete(self, using=None, keep_parents=False):
-        for item in self.items.all():
-            item.item.stock_balance += item.quantity
-            item.item.save()
-        super().delete(using=using, keep_parents=keep_parents)
+            for item in self.items.all():
+                item.item.stock_balance += item.quantity
+                item.item.save()
+            super().delete(using=using, keep_parents=keep_parents)
 
 class IssueRecordItem(models.Model):
     issue_record = models.ForeignKey(IssueRecord, related_name='items', on_delete=models.CASCADE, db_index=True)
@@ -155,7 +149,7 @@ class IssueRecordItem(models.Model):
         self.total_price = self.quantity * self.unit_price
         self.item.save()
         super().save(*args, **kwargs)
-        self.issue_record.update_total_value()
+        self.issue_record.total_value()
     
     def delete(self, *args, **kwargs):
         self.item.stock_balance += self.quantity
