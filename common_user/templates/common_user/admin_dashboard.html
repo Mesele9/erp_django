@@ -1,58 +1,27 @@
-<!-- templates/admin_dashboard.html -->
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Admin Dashboard</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="{% url 'hrms:hr_dashboard' %}">HR Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'store_dashboard' %}">Store Dashboard</a></li>
-            </ul>
-            <ul class="navbar-nav ml-auto">
-                {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
-                {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-                {% endif %}
-            </ul>
-        </div>
-    </nav>
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">HR Management</h5>
-                        <p class="card-text">Manage employees, departments, positions, and more.</p>
-                        <a href="{% url 'hrms:hr_dashboard' %}" class="btn btn-primary">Go to HR Dashboard</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">Store Management</h5>
-                        <p class="card-text">Manage inventory, purchases, issues, and suppliers.</p>
-                        <a href="{% url 'store_dashboard' %}" class="btn btn-primary">Go to Store Dashboard</a>
-                    </div>
-                </div>
+<!-- templates/common_user/admin_dashboard.html -->
+{% extends 'common_user/base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">HR Management</h5>
+                <p class="card-text">Manage employees, departments, positions, and more.</p>
+                <a href="{% url 'hrms:hr_dashboard' %}" class="btn btn-primary">Go to HR Dashboard</a>
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+    <div class="col-md-6">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Store Management</h5>
+                <p class="card-text">Manage inventory, purchases, issues, and suppliers.</p>
+                <a href="{% url 'store_dashboard' %}" class="btn btn-primary">Go to Store Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

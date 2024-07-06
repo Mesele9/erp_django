@@ -1,0 +1,38 @@
+<!-- templates/common_user/backup.html -->
+{% extends "common_user/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Database Backup</h2>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="backup_location">Backup Location</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="backup_location" name="backup_location" value="{{ form.backup_location.value|default_if_none:form.backup_location.initial }}">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="select_location">Select Location</button>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Backup</button>
+    </form>
+</div>
+
+<script>
+document.getElementById('select_location').addEventListener('click', function() {
+    const backupLocationInput = document.getElementById('backup_location');
+    const selectedLocation = prompt("Please enter the backup location:", backupLocationInput.value);
+    if (selectedLocation !== null) {
+        backupLocationInput.value = selectedLocation;
+    }
+});
+</script>
+{% endblock %}

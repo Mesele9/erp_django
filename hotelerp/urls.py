@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from common_user.views import login_view, admin_dashboard, logout_view
+from common_user.views import login_view, admin_dashboard, logout_view, database_backup, database_restore
 from employee_management.views import hr_dashboard
 from store.views import store_dashboard
 
@@ -32,6 +32,9 @@ urlpatterns = [
 
     path('hr_dashboard/', hr_dashboard, name='hr_dashboard'),
     path('store_dashboard/', store_dashboard, name='store_dashboard'),
+
+    path('database_backup/', database_backup, name='database_backup'),
+    path('database_restore/', database_restore, name='database_restore'),
 
 
 ]
