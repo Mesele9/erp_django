@@ -46,6 +46,31 @@ class ItemAdmin(ImportExportModelAdmin):
     list_display = ('description', 'category', 'subcategory', 'unit_of_measurement', 'current_unit_price', 'stock_balance', 'minimum_stock')
     search_fields = ('description', 'category', 'subcategory')
 
+class CategoryResource(resources.ModelResource):
+    class Meta:
+        model = Category
+        fields = ('id', 'name')
+        export_order = ('id', 'name')
+
+class SubcategoryResource(resources.ModelResource):
+    class Meta:
+        model = Subcategory
+        fields = ('id', 'name', 'category')
+        export_order = ('id', 'name', 'category')
+
+
+@admin.register(Category)
+class CategoryAdmin(ImportExportModelAdmin):
+    resource_class = CategoryResource
+    list_display = ('id', 'name')
+    search_fields = ('name',)
+
+@admin.register(Subcategory)
+class SubcategoryAdmin(ImportExportModelAdmin):
+    resource_class = SubcategoryResource
+    list_display = ('id', 'name', 'category')
+    search_fields = ('name', 'category__name')
+
 
 class PurchaseRecordItemInline(admin.TabularInline):
     model = PurchaseRecordItem
@@ -57,8 +82,3 @@ class PurchaseRecordAdmin(admin.ModelAdmin):
 
 admin.site.register(PurchaseRecord, PurchaseRecordAdmin)
 admin.site.register(IssueRecord)
-
-
-admin.site.register(Category)
-admin.site.register(Subcategory)
-

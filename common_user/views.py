@@ -9,7 +9,6 @@ from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.timezone import now
-
 from .db_backup_restore import backup_database, restore_database
 from .forms import DatabaseBackupForm
 from django.http import HttpResponse
@@ -58,21 +57,19 @@ def database_backup(request):
     if request.method == 'POST':
         form = DatabaseBackupForm(request.POST)
         if form.is_valid():
-            timestamp = now().strftime('%Y%m%d%H%M%S')
-            backup_filename = f'db_backup_{timestamp}.sql'
-            backup_path = os.path.join('/tmp', backup_filename)
-            
+            backup_location = form.cleaned_data['backup_location']
             try:
-                backup_database(backup_path)
+                backup_path = backup_database(backup_location)
                 with open(backup_path, 'rb') as f:
                     response = HttpResponse(f.read(), content_type='application/sql')
-                    response['Content-Disposition'] = f'attachment; filename={backup_filename}'
+                    response['Content-Disposition'] = f'attachment; filename={os.path.basename(backup_path)}'
                     messages.success(request, 'Database backup created successfully.')
                     return response
             except Exception as e:
-                messages.error(request, f'Error creating database backup: {e}')
+                messages.error(request, f'Error during backup: {str(e)}')
     else:
         form = DatabaseBackupForm()
+
     return render(request, 'common_user/backup.html', {'form': form})
 
 @user_passes_test(is_admin)
@@ -80,15 +77,11 @@ def database_restore(request):
     if request.method == 'POST':
         backup_file = request.FILES.get('backup_file')
         if backup_file:
-            backup_path = f'/tmp/{backup_file.name}'
-            with open(backup_path, 'wb') as f:
-                for chunk in backup_file.chunks():
-                    f.write(chunk)
-            
             try:
-                restore_database(backup_path)
+                restore_database(backup_file)
                 messages.success(request, 'Database restored successfully.')
                 return redirect('admin_dashboard')
             except Exception as e:
-                messages.error(request, f'Error restoring database: {e}')
+                messages.error(request, f'Error during restore: {str(e)}')
+
     return render(request, 'common_user/restore.html')
