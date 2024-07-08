@@ -9,11 +9,12 @@ from .forms import EmployeeForm, DepartmentForm, PositionForm, DocumentForm
 from .utils import is_upcoming_birthday, calculate_service_duration
 
 
+
 @login_required
 def hr_dashboard(request):
     # Total number of employees
-    active_employees = Employee.objects.filter(is_active=True).select_related('department').prefetch_related('position')
-    total_employees = active_employees.count()
+    active_employees = Employee.objects.filter(is_active=True)
+    total_employees = Employee.objects.filter(is_active=True).count()
 
     # Employees by department
     department_data = active_employees.values('department__name').annotate(employee_count=Count('id'))
@@ -21,7 +22,11 @@ def hr_dashboard(request):
     # Employees by gender
     male_count = active_employees.filter(gender='M').count()
     female_count = active_employees.filter(gender='F').count()
-    
+
+   # COC certified distribution
+    coc_certified_count = active_employees.filter(is_coc_certified=True).count()
+    coc_not_certified_count = active_employees.filter(is_coc_certified=False).count()
+
     # Educational level distribution
     education_data = Employee.objects.filter(is_active=True).values('education_level').annotate(count=Count('education_level'))
 
@@ -38,14 +43,13 @@ def hr_dashboard(request):
         'total_employees': total_employees,
         'male_count': male_count,
         'female_count': female_count,
+        'coc_certified_count': coc_certified_count,
+        'coc_not_certified_count': coc_not_certified_count,
         'education_data': education_data,
         'upcoming_birthdays': upcoming_birthdays
     }
 
     return render(request, 'dashboard.html', context)
-
-
-
 @login_required
 def employee_list(request):
     all_employees = Employee.objects.all().order_by('id')

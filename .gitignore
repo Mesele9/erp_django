@@ -1,7 +1,10 @@
 # Python
+**/__pycache__/
 __pycache__/
 *$py.class
-**/__pycache__
+*.py[cod]
 *.pyc
 db.sqlite3
+.env
+
 

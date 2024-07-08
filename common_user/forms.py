@@ -17,5 +17,5 @@ class DatabaseBackupForm(forms.Form):
     backup_location = forms.CharField(
         label='Backup Location', 
         max_length=255, 
-        initial='/home/mesele/erp/hotelerp/backup'
+        initial='/home/mesele/erp/erp_django/backup'
     )

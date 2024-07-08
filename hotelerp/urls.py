@@ -19,7 +19,8 @@ from django.urls import path, include
 from common_user.views import login_view, admin_dashboard, logout_view, database_backup, database_restore
 from employee_management.views import hr_dashboard
 from store.views import store_dashboard
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', login_view, name='login'),
@@ -36,5 +37,8 @@ urlpatterns = [
     path('database_backup/', database_backup, name='database_backup'),
     path('database_restore/', database_restore, name='database_restore'),
 
+] 
 
-]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

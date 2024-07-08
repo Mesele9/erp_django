@@ -11,11 +11,13 @@ djangorestframework==3.15.1
 et-xmlfile==1.1.0
 ethiopian-date==1.0
 future==1.0.0
+gunicorn==22.0.0
 humanize==4.9.0
 import-export==0.3.1
 MarkupPy==1.14
 odfpy==1.4.1
 openpyxl==3.1.2
+packaging==24.1
 pillow==10.3.0
 psycopg2-binary==2.9.9
 python-dateutil==2.9.0.post0
