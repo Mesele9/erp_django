@@ -32,7 +32,7 @@ def get_subcategories(request):
 @login_required
 def supplier_list(request):
     form = SupplierFilterForm(request.GET or None)
-    suppliers = Supplier.objects.all()
+    suppliers = Supplier.objects.all().order_by('id')
 
     if form.is_valid():
         if form.cleaned_data['name']:
@@ -81,7 +81,7 @@ def supplier_delete(request, pk):
 @login_required
 def item_list(request):
     form = ItemFilterForm(request.GET or None)
-    items = Item.objects.all()
+    items = Item.objects.all().order_by('id')
 
     if form.is_valid():
         if form.cleaned_data['description']:
@@ -134,7 +134,7 @@ def item_delete(request, pk):
 
 def purchase_record_list(request):
     form = PurchaseRecordFilterForm(request.GET or None)
-    purchase_records = PurchaseRecord.objects.all()
+    purchase_records = PurchaseRecord.objects.all().order_by('-date')
 
     if form.is_valid():
         if form.cleaned_data['date_from']:
@@ -205,7 +205,7 @@ def purchase_record_delete(request, pk):
 
 def issue_record_list(request):
     form = IssueRecordFilterForm(request.GET or None)
-    issue_records = IssueRecord.objects.all()
+    issue_records = IssueRecord.objects.all().order_by('-date')
 
     if form.is_valid():
         if form.cleaned_data['date_from']:
