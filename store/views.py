@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F, Sum, Q, Avg
 from .models import Item, PurchaseRecord, PurchaseRecordItem, IssueRecord, IssueRecordItem, Subcategory, Supplier
 from .forms import IssueRecordFilterForm, IssueReportForm, ItemForm, ItemFilterForm, ItemsIssuedReportForm, ItemsPurchasedReportForm, PurchaseRecordFilterForm, PurchaseRecordForm, PurchaseRecordItemFormSet, IssueRecordForm, IssueRecordItemFormSet, PurchaseReportForm, ReportForm, SummarizedItemsIssuedReportForm, SummarizedItemsPurchasedReportForm, SupplierForm, SupplierFilterForm
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 @login_required
@@ -11,7 +12,7 @@ def store_dashboard(request):
     #items = Item.objects.all()
     recent_purchase_records = PurchaseRecord.objects.order_by('-date')[:5]
     recent_issue_records = IssueRecord.objects.order_by('-date')[:5]
-    low_stock_items = Item.objects.filter(stock_balance__lte=F('minimum_stock'))
+    low_stock_items = Item.objects.filter(stock_balance__lt=F('minimum_stock'))
     
     context = {
         #'items': items,
@@ -36,7 +37,16 @@ def supplier_list(request):
     if form.is_valid():
         if form.cleaned_data['name']:
             suppliers = suppliers.filter(name__icontains=form.cleaned_data['name'])
-        
+    
+    paginator = Paginator(suppliers, 10)  # Show 10 suppliers per page
+    page = request.GET.get('page')
+    try:
+        suppliers = paginator.page(page)
+    except PageNotAnInteger:
+        suppliers = paginator.page(1)
+    except EmptyPage:
+        suppliers = paginator.page(paginator.num_pages)
+
     return render(request, 'store/supplier_list.html', {'suppliers': suppliers, 'form': form})
 
 def supplier_create(request):
@@ -67,6 +77,7 @@ def supplier_delete(request, pk):
         return redirect('supplier_list')
     return render(request, 'store/supplier_confirm_delete.html', {'supplier': supplier})
 
+
 @login_required
 def item_list(request):
     form = ItemFilterForm(request.GET or None)
@@ -79,6 +90,15 @@ def item_list(request):
             items = items.filter(category=form.cleaned_data['category'])
         if form.cleaned_data['subcategory']:
             items = items.filter(subcategory=form.cleaned_data['subcategory'])
+
+    paginator = Paginator(items, 30)  # Show 10 items per page
+    page = request.GET.get('page')
+    try:
+        items = paginator.page(page)
+    except PageNotAnInteger:
+        items = paginator.page(1)
+    except EmptyPage:
+        items = paginator.page(paginator.num_pages)
 
     return render(request, 'store/item_list.html', {'items': items, 'form': form})
 
@@ -124,6 +144,14 @@ def purchase_record_list(request):
         if form.cleaned_data['voucher_number']:
             purchase_records = purchase_records.filter(voucher_number__icontains=form.cleaned_data['voucher_number'])
 
+    paginator = Paginator(purchase_records, 10)  # Show 10 records per page
+    page = request.GET.get('page')
+    try:
+        purchase_records = paginator.page(page)
+    except PageNotAnInteger:
+        purchase_records = paginator.page(1)
+    except EmptyPage:
+        purchase_records = paginator.page(paginator.num_pages)
 
     return render(request, 'store/purchase_record_list.html', {'purchase_records': purchase_records, 'form': form})
 
@@ -186,6 +214,15 @@ def issue_record_list(request):
             issue_records = issue_records.filter(date__lte=form.cleaned_data['date_to'])
         if form.cleaned_data['voucher_number']:
             issue_records = issue_records.filter(voucher_number__icontains=form.cleaned_data['voucher_number'])
+
+    paginator = Paginator(issue_records, 10)  # Show 10 records per page
+    page = request.GET.get('page')
+    try:
+        issue_records = paginator.page(page)
+    except PageNotAnInteger:
+        issue_records = paginator.page(1)
+    except EmptyPage:
+        issue_records = paginator.page(paginator.num_pages)
 
     return render(request, 'store/issue_record_list.html', {'issue_records': issue_records, 'form': form})
 

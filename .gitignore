@@ -8,5 +8,3 @@ db.sqlite3
 .env
 /media/
 */migrations/*
-
-
