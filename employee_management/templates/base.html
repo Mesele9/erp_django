@@ -40,6 +40,9 @@
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+			 {% if user.role == 'admin' %}
+                                 <li class="nav-item"><a class="nav-link" href="{% url 'store_dashboard' %}">Store Dashboard</a></li>
+                        {% endif %}
                     </li>
                 {% else %}
                     <li class="nav-item">

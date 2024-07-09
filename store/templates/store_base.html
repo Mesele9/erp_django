@@ -40,6 +40,9 @@
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+			{% if user.role == 'admin' %}
+		   		 <li class="nav-item"><a class="nav-link" href="{% url 'hrms:hr_dashboard' %}">HR Dashboard</a></li>
+			{% endif %}
                 {% else %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
                 {% endif %}
@@ -59,9 +62,14 @@
         {% endif %}
     </div>
 
-    <div class="container mt-4">
+    <div class="container mt-1">
         {% block content %}{% endblock %}
     </div>
+
+     <footer class="container-fluid mt-5 py-3 text-center bg-dark text-light">
+        &copy; Yegezu Lejoch Hotel - All Rights Reserved
+    </footer>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

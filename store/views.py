@@ -91,7 +91,7 @@ def item_list(request):
         if form.cleaned_data['subcategory']:
             items = items.filter(subcategory=form.cleaned_data['subcategory'])
 
-    paginator = Paginator(items, 30)  # Show 10 items per page
+    paginator = Paginator(items, 20)  # Show 10 items per page
     page = request.GET.get('page')
     try:
         items = paginator.page(page)
