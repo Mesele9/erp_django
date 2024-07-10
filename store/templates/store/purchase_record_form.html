@@ -56,6 +56,8 @@
           newForm.remove();
           updateTotalForms();
         });
+        // Initialize Select2 on new form
+        $(newForm).find('.select2').select2();
       }
 
       function updateTotalForms() {
@@ -79,6 +81,10 @@
           updateTotalForms();
         });
       });
+
+      // Initialize Select2 for existing forms
+      $('.select2').select2();
     });
   </script>
 {% endblock %}
+

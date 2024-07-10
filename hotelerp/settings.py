@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'django_humanize',
     'import_export',
+    'django_select2',
+
 
     'employee_management',
     'store',

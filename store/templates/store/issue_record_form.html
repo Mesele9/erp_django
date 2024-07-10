@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+  <div class="container">
   <div class="container col-md-6">
   <h2>New Issue Record</h2>
   <form method="post">
@@ -22,10 +23,9 @@
     <button type="submit" class="btn btn-primary mt-4 ml-2">Save</button>
     <a href="{% url 'issue_record_list' %}" class="btn btn-secondary mt-4" style="margin-left: 2.50em;">Back</a>
     </div>
-
   </form>
   </div>
-
+  </div>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       let formsetContainer = document.getElementById('formset-container');
@@ -56,6 +56,8 @@
           newForm.remove();
           updateTotalForms();
         });
+        // Initialize Select2 on new form
+        $(newForm).find('.select2').select2();
       }
 
       function updateTotalForms() {
@@ -79,6 +81,9 @@
           updateTotalForms();
         });
       });
+
+      // Initialize Select2 for existing forms
+      $('.select2').select2();
     });
   </script>
 {% endblock %}

@@ -30,6 +30,21 @@ class PurchaseRecordForm(forms.ModelForm):
             'date': DateInput(),
         }
 
+""" class PurchaseRecordItemForm(forms.ModelForm):
+    class Meta:
+        model = PurchaseRecordItem
+        fields = ['item', 'quantity', 'unit_price']
+        widgets = {
+            'unit_price': forms.NumberInput(attrs={'step': '0.01'}),
+            'item': forms.Select(attrs={'class': 'item-select'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['item'].queryset = Item.objects.all()
+
+ """
+
 class PurchaseRecordItemForm(forms.ModelForm):
     class Meta:
         model = PurchaseRecordItem
@@ -40,7 +55,9 @@ class PurchaseRecordItemForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['item'].widget.attrs.update({'class': 'select2'})
         self.fields['item'].queryset = Item.objects.all()
+
 
 class IssueRecordForm(forms.ModelForm):
     class Meta:
@@ -50,6 +67,18 @@ class IssueRecordForm(forms.ModelForm):
             'date': DateInput(),
         }
 
+""" class IssueRecordItemForm(forms.ModelForm):
+    class Meta:
+        model = IssueRecordItem
+        fields = ['item', 'quantity']
+        widgets = {
+            'item': forms.Select(attrs={'class': 'item-select'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['item'].queryset = Item.objects.all()
+ """
 class IssueRecordItemForm(forms.ModelForm):
     class Meta:
         model = IssueRecordItem
@@ -57,7 +86,9 @@ class IssueRecordItemForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['item'].widget.attrs.update({'class': 'select2'})
         self.fields['item'].queryset = Item.objects.all()
+
 
 PurchaseRecordItemFormSet = inlineformset_factory(
     PurchaseRecord, PurchaseRecordItem, form=PurchaseRecordItemForm, extra=1, can_delete=True
@@ -176,21 +207,3 @@ class SummarizedItemsIssuedReportForm(forms.Form):
     date_to = forms.DateField(required=False, widget=forms.TextInput(attrs={'type': 'date'}))
     department = forms.ModelChoiceField(queryset=Department.objects.all(), required=False)
 
-
-""" class ItemsPurchasedReportForm(forms.Form):
-    start_date = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}), required=True)
-    end_date = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}), required=True)
-    purchaser = forms.CharField(label='Purchaser', max_length=100, required=False)
-    supplier = forms.ModelChoiceField(queryset=Supplier.objects.all(), required=False)
-
-
-class ItemsIssuedReportForm(forms.Form):
-    start_date = forms.DateField(label='Start Date')
-    end_date = forms.DateField(label='End Date')
-    department = forms.CharField(label='Department')
-
-class IssueItemReportForm(forms.Form):
-    start_date = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}), required=True)
-    end_date = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}), required=True)
-    department = forms.CharField(required=False)
- """

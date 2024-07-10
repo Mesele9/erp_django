@@ -8,6 +8,16 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 @login_required
+def search_items(request):
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        q = request.GET.get('q', '')
+        items = Item.objects.filter(Q(description__icontains=q) | Q(category__name__icontains=q) | Q(subcategory__name__icontains=q))
+        results = [{'id': item.id, 'text': item.description} for item in items]
+        return JsonResponse({'results': results}, safe=False)
+    return JsonResponse({'results': []}, safe=False)
+
+
+@login_required
 def store_dashboard(request):
     #items = Item.objects.all()
     recent_purchase_records = PurchaseRecord.objects.order_by('-date')[:5]

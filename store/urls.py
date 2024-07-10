@@ -47,6 +47,8 @@ urlpatterns = [
 
     path('get_subcategories/', views.get_subcategories, name='get_subcategories'),
 
+    path('search-items/', views.search_items, name='search_items'),
+
     
 ]
 
