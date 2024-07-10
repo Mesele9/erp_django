@@ -74,7 +74,7 @@ class PurchaseRecord(models.Model):
     def __str__(self):
         return f'Purchase Record {self.voucher_number} - {self.date} {self.total_value}'
 
-    @property
+    
     def total_value(self):
         return sum(item.total_price for item in self.items.all())
 

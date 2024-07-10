@@ -110,7 +110,8 @@
                                 <ul>
                                     {% for document in documents %}
                                     <li>
-                                        <a href="{{ document.file.url }}" target="_blank">{{ document.get_name_display }}</a>
+
+                                        <p><a href="{{ document.file.url }}" target="_blank" rel="noopener noreferrer">{{ document.get_name_display }}</a>View</p>
                                         <p><strong>Description:</strong> {{ document.description }}</p>
                                         <p><strong>Date Uploaded:</strong> {{ document.date_uploaded }}</p>
                                     </li>
