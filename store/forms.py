@@ -30,20 +30,6 @@ class PurchaseRecordForm(forms.ModelForm):
             'date': DateInput(),
         }
 
-""" class PurchaseRecordItemForm(forms.ModelForm):
-    class Meta:
-        model = PurchaseRecordItem
-        fields = ['item', 'quantity', 'unit_price']
-        widgets = {
-            'unit_price': forms.NumberInput(attrs={'step': '0.01'}),
-            'item': forms.Select(attrs={'class': 'item-select'}),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['item'].queryset = Item.objects.all()
-
- """
 
 class PurchaseRecordItemForm(forms.ModelForm):
     class Meta:
@@ -55,7 +41,7 @@ class PurchaseRecordItemForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['item'].widget.attrs.update({'class': 'select2'})
+        self.fields['item'].widget.attrs.update({'class': 'item-select select2'})
         self.fields['item'].queryset = Item.objects.all()
 
 
@@ -67,18 +53,7 @@ class IssueRecordForm(forms.ModelForm):
             'date': DateInput(),
         }
 
-""" class IssueRecordItemForm(forms.ModelForm):
-    class Meta:
-        model = IssueRecordItem
-        fields = ['item', 'quantity']
-        widgets = {
-            'item': forms.Select(attrs={'class': 'item-select'}),
-        }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['item'].queryset = Item.objects.all()
- """
 class IssueRecordItemForm(forms.ModelForm):
     class Meta:
         model = IssueRecordItem
@@ -86,7 +61,7 @@ class IssueRecordItemForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['item'].widget.attrs.update({'class': 'select2'})
+        self.fields['item'].widget.attrs.update({'class': 'item-select select2'})
         self.fields['item'].queryset = Item.objects.all()
 
 

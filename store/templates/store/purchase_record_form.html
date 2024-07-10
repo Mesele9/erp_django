@@ -2,89 +2,120 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-  <div class="container">
-  <div class="container col-md-6">
-  <h2>New Purchase Record</h2>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form|crispy }}
-    {{ formset.management_form }}
-    <h3>Items</h3>
-    <div id="formset-container">
-      {% for form in formset %}
-        <div class="formset-item">
-          {{ form|crispy }}
-          <button type="button" class="remove-item btn btn-warning">Remove</button>
+<div class="container col-md-6">
+    <h2>New Purchase Record</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form|crispy }}
+        {{ formset.management_form }}
+        <h3>Items</h3>
+        <div id="formset-container">
+            {% for form in formset %}
+                <div class="formset-item">
+                    {{ form|crispy }}
+                    <button type="button" class="remove-item btn btn-warning">Remove</button>
+                </div>
+            {% endfor %}
         </div>
-      {% endfor %}
-    </div>
-    <div>
-    <button type="button" id="add-item" class="btn btn-info mt-4">Add Item</button>
-    <button type="submit" class="btn btn-primary mt-4 ml-2">Save</button>
-    <a href="{% url 'purchase_record_list' %}" class="btn btn-secondary mt-4" style="margin-left: 2.50em;">Back</a>
-    </div>
-  </form>
-  </div>
-  </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      let formsetContainer = document.getElementById('formset-container');
-      let addItemButton = document.getElementById('add-item');
-      let totalForms = document.querySelector('#id_items-TOTAL_FORMS');
-      let formsetPrefix = 'items';
+        <div>
+            <button type="button" id="add-item" class="btn btn-info mt-4">Add Item</button>
+            <button type="submit" class="btn btn-primary mt-4 ml-2">Save</button>
+            <a href="{% url 'purchase_record_list' %}" class="btn btn-secondary mt-4" style="margin-left: 2.50em;">Back</a>
+        </div>
+    </form>
+</div>
 
-      function updateElementIndex(el, prefix, index) {
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let formsetContainer = document.getElementById('formset-container');
+    let addItemButton = document.getElementById('add-item');
+    let totalForms = document.querySelector('#id_items-TOTAL_FORMS');
+    let formsetPrefix = 'items';
+
+    function updateElementIndex(el, prefix, index) {
         let idRegex = new RegExp('(' + prefix + '-\\d+-)');
         let replacement = prefix + '-' + index + '-';
         if (el.getAttribute('for')) el.setAttribute('for', el.getAttribute('for').replace(idRegex, replacement));
         if (el.id) el.id = el.id.replace(idRegex, replacement);
         if (el.name) el.name = el.name.replace(idRegex, replacement);
-      }
+    }
 
-      function addForm(formsetContainer, formsetPrefix) {
+    function addForm() {
         let newFormIndex = formsetContainer.children.length;
         let newForm = document.createElement('div');
         newForm.classList.add('formset-item');
-        newForm.innerHTML = formsetContainer.children[0].innerHTML.replace(/__prefix__/g, newFormIndex);
+        let emptyForm = document.getElementById('empty-form').innerHTML;
+        newForm.innerHTML = emptyForm.replace(/__prefix__/g, newFormIndex);
         formsetContainer.appendChild(newForm);
         totalForms.value = formsetContainer.children.length;
-        let formFields = newForm.querySelectorAll('input, select, textarea, button');
-        formFields.forEach(function(field) {
-          updateElementIndex(field, formsetPrefix, newFormIndex);
+        newForm.querySelectorAll('input, select, textarea, button').forEach(field => {
+            updateElementIndex(field, formsetPrefix, newFormIndex);
         });
+        initializeSelect2(newForm);
+
         newForm.querySelector('.remove-item').addEventListener('click', function() {
-          newForm.remove();
-          updateTotalForms();
+            newForm.remove();
+            updateTotalForms();
         });
-        // Initialize Select2 on new form
-        $(newForm).find('.select2').select2();
-      }
+    }
 
-      function updateTotalForms() {
+    function updateTotalForms() {
         totalForms.value = formsetContainer.children.length;
-        let formsetItems = formsetContainer.querySelectorAll('.formset-item');
-        formsetItems.forEach((form, index) => {
-          let formFields = form.querySelectorAll('input, select, textarea, button');
-          formFields.forEach((field) => {
-            updateElementIndex(field, formsetPrefix, index);
-          });
+        formsetContainer.querySelectorAll('.formset-item').forEach((form, index) => {
+            form.querySelectorAll('input, select, textarea, button').forEach(field => {
+                updateElementIndex(field, formsetPrefix, index);
+            });
+            initializeSelect2(form);
         });
-      }
 
-      addItemButton.addEventListener('click', function() {
-        addForm(formsetContainer, formsetPrefix);
-      });
+        formsetContainer.querySelectorAll('.remove-item').forEach(button => {
+            button.addEventListener('click', function() {
+                button.parentElement.remove();
+                updateTotalForms();
+            });
+        });
+    }
 
-      document.querySelectorAll('.remove-item').forEach(button => {
+    function initializeSelect2(container) {
+        $(container).find('.item-select').select2({
+            ajax: {
+                url: "{% url 'search_items' %}",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return { q: params.term };
+                },
+                processResults: function(data) {
+                    return { results: data.results };
+                },
+                cache: true,
+            }
+        });
+    }
+
+    addItemButton.addEventListener('click', addForm);
+
+    initializeSelect2(formsetContainer);
+
+    document.querySelectorAll('.remove-item').forEach(button => {
         button.addEventListener('click', function() {
-          button.parentElement.remove();
-          updateTotalForms();
+            button.parentElement.remove();
+            updateTotalForms();
         });
-      });
-
-      // Initialize Select2 for existing forms
-      $('.select2').select2();
     });
-  </script>
-{% endblock %}
+});
 
+</script>
+
+<!-- Template for empty form -->
+<script type="text/template" id="empty-form">
+    <div class="formset-item">
+        {{ formset.empty_form|crispy }}
+        <button type="button" class="remove-item btn btn-warning">Remove</button>
+    </div>
+</script>
+{% endblock %}
