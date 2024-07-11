@@ -33,8 +33,8 @@ def store_dashboard(request):
     
     return render(request, 'store/dashboard.html', context)
 
-def get_subcategories(request):
-    category_id = request.GET.get('category')
+def load_subcategories(request):
+    category_id = request.GET.get('category_id')
     subcategories = Subcategory.objects.filter(category_id=category_id).order_by('name')
     return JsonResponse(list(subcategories.values('id', 'name')), safe=False)
 

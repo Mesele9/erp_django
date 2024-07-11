@@ -15,11 +15,22 @@ class SupplierForm(forms.ModelForm):
 
 class ItemForm(forms.ModelForm):
     category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label='Select Category', required=True)
-    subcategory = forms.ModelChoiceField(queryset=Subcategory.objects.all(), empty_label='Select Subcategory', required=False)
+    subcategory = forms.ModelChoiceField(queryset=Subcategory.objects.none(), empty_label='Select Subcategory', required=False)
 
     class Meta:
         model = Item
         fields = ['description', 'category', 'subcategory', 'unit_of_measurement', 'current_unit_price', 'stock_balance', 'minimum_stock']
+
+    def __init__(self, *args, **kwargs):
+        super(ItemForm, self).__init__(*args, **kwargs)
+        if 'category' in self.data:
+            try:
+                category_id = int(self.data.get('category'))
+                self.fields['subcategory'].queryset = Subcategory.objects.filter(category_id=category_id).order_by('name')
+            except (ValueError, TypeError):
+                pass  # invalid input from the client; ignore and fallback to empty SubCategory queryset
+        elif self.instance.pk:
+            self.fields['subcategory'].queryset = self.instance.category.subcategories.order_by('name')
 
 
 class PurchaseRecordForm(forms.ModelForm):
@@ -80,10 +91,22 @@ class ItemFilterForm(forms.Form):
     category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False, label=False,
         empty_label='Select Category',
         widget=forms.Select(attrs={'placeholder': 'Category'}))
-    subcategory = forms.ModelChoiceField(queryset=Subcategory.objects.all(), required=False, label=False,
+    subcategory = forms.ModelChoiceField(queryset=Subcategory.objects.none(), required=False, label=False,
         empty_label='Select Subcategory', 
         widget=forms.Select(attrs={'placeholder': 'Subcategory'}))
     
+    def __init__(self, *args, **kwargs):
+        super(ItemFilterForm, self).__init__(*args, **kwargs)
+        self.fields['subcategory'].queryset = Subcategory.objects.none()
+
+        if 'category' in self.data:
+            try:
+                category_id = int(self.data.get('category'))
+                self.fields['subcategory'].queryset = Subcategory.objects.filter(category_id=category_id).order_by('name')
+            except (ValueError, TypeError):
+                pass
+
+
 class PurchaseRecordFilterForm(forms.Form):
     date_from = forms.DateField(label=False, required=False, widget=forms.DateInput(attrs={'type': 'date'}))
     date_to = forms.DateField(label=False, required=False, widget=forms.DateInput(attrs={'type': 'date'}))

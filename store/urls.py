@@ -45,10 +45,9 @@ urlpatterns = [
     path('reports/summarized-purchased/', views.summarized_items_purchased_report, name='summarized_items_purchased_report'),
     path('reports/summarized-issued/', views.summarized_items_issued_report, name='summarized_items_issued_report'),
 
-    path('get_subcategories/', views.get_subcategories, name='get_subcategories'),
-
+    #path('load_subcategories/', views.load_subcategories, name='load_subcategories'),
+    path('ajax/load-subcategories/', views.load_subcategories, name='ajax_load_subcategories'),
     path('search-items/', views.search_items, name='search_items'),
-
     
 ]
 

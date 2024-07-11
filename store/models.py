@@ -21,7 +21,7 @@ class Category(models.Model):
 
 class Subcategory(models.Model):
     name = models.CharField(max_length=100)
-    category = models.ForeignKey(Category, related_name='subcategory', on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, related_name='subcategories', on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ('name', 'category')
