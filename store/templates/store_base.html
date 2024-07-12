@@ -48,7 +48,7 @@
         </div>
     </nav>
 
-    <div class="container mt-2">
+    <div class="container">
         {% if messages %}
             <div class="container mt-2">
                 {% for message in messages %}
@@ -58,9 +58,7 @@
                 {% endfor %}
             </div>
         {% endif %}
-    </div>
 
-    <div class="container mt-1">
         {% block content %}{% endblock %}
     </div>
 

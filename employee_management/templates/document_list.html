@@ -34,7 +34,7 @@
                     <td>{{ document.date_uploaded }}</td>
                     <td>
                         <a href="{% url 'hrms:document_update' document.pk %}" class="btn btn-sm btn-outline-primary" style="margin-right: 10px;">Edit</a>
-                        <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('{{ document.name }}', '{{ document.pk }}')">Delete</button>
+                        <a href="{% url 'hrms:document_delete' document.pk %}" class="btn btn-sm btn-outline-danger" onclick="confirmDelete('{{ document.name }}', '{{ document.pk }}')">Delete</a>
                     </td>
                 </tr>
             {% empty %}
