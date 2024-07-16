@@ -45,13 +45,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-
     'crispy_forms',
     'crispy_bootstrap4',
     'django_humanize',
     'import_export',
     'django_select2',
-
+    'bootstrap4',
 
     'employee_management',
     'store',

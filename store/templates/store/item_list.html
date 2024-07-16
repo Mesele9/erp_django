@@ -1,4 +1,3 @@
-<!-- templates/inventory/item_list.html -->
 {% extends 'store_base.html' %}
 {% load crispy_forms_tags %}
 
@@ -58,8 +57,8 @@
 <div class="pagination">
     <span class="step-links">
         {% if items.has_previous %}
-            <a href="?page=1{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.subcategory %}&subcategory={{ request.GET.subcategory }}{% endif %}">&laquo; first</a>
-            <a href="?page={{ items.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.subcategory %}&subcategory={{ request.GET.subcategory }}{% endif %}">previous</a>
+            <a href="?page=1{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_subcategory %}&subcategory={{ selected_subcategory }}{% endif %}">&laquo; first</a>
+            <a href="?page={{ items.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_subcategory %}&subcategory={{ selected_subcategory }}{% endif %}">previous</a>
         {% endif %}
 
         <span class="current">
@@ -67,12 +66,11 @@
         </span>
 
         {% if items.has_next %}
-            <a href="?page={{ items.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.subcategory %}&subcategory={{ request.GET.subcategory }}{% endif %}">next</a>
-            <a href="?page={{ items.paginator.num_pages }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.subcategory %}&subcategory={{ request.GET.subcategory }}{% endif %}">last &raquo;</a>
+            <a href="?page={{ items.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_subcategory %}&subcategory={{ selected_subcategory }}{% endif %}">next</a>
+            <a href="?page={{ items.paginator.num_pages }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_subcategory %}&subcategory={{ selected_subcategory }}{% endif %}">last &raquo;</a>
         {% endif %}
     </span>
 </div>
-
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">

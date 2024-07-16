@@ -1,4 +1,5 @@
 from django import forms
+from crispy_forms.helper import FormHelper
 from .models import Category, Subcategory, Supplier, Item, PurchaseRecord, PurchaseRecordItem, IssueRecord, IssueRecordItem
 from django.forms.models import inlineformset_factory
 from employee_management.models import Department
@@ -23,14 +24,41 @@ class ItemForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ItemForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+
+
         if 'category' in self.data:
             try:
                 category_id = int(self.data.get('category'))
                 self.fields['subcategory'].queryset = Subcategory.objects.filter(category_id=category_id).order_by('name')
             except (ValueError, TypeError):
-                pass  # invalid input from the client; ignore and fallback to empty SubCategory queryset
+                self.fields['subcategory'].queryset = Subcategory.objects.none()
         elif self.instance.pk:
             self.fields['subcategory'].queryset = self.instance.category.subcategories.order_by('name')
+
+
+
+class ItemFilterForm(forms.Form):
+    description = forms.CharField(required=False, label=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Description'}))
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False, label=False,
+        empty_label='Select Category',
+        widget=forms.Select(attrs={'placeholder': 'Category'}))
+    subcategory = forms.ModelChoiceField(queryset=Subcategory.objects.none(), required=False, label=False,
+        empty_label='Select Subcategory',
+        widget=forms.Select(attrs={'placeholder': 'Subcategory'}))
+
+    def __init__(self, *args, **kwargs):
+        super(ItemFilterForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.fields['subcategory'].queryset = Subcategory.objects.none()
+
+        if 'category' in self.data:
+            try:
+                category_id = int(self.data.get('category'))
+                self.fields['subcategory'].queryset = Subcategory.objects.filter(category_id=category_id).order_by('name')
+            except (ValueError, TypeError):
+                self.fields['subcategory'].queryset = Subcategory.objects.none()
 
 
 class PurchaseRecordForm(forms.ModelForm):
@@ -83,28 +111,6 @@ PurchaseRecordItemFormSet = inlineformset_factory(
 IssueRecordItemFormSet = inlineformset_factory(
     IssueRecord, IssueRecordItem, form=IssueRecordItemForm, extra=1, can_delete=True
 )
-
-
-class ItemFilterForm(forms.Form):
-    description = forms.CharField(required=False, label=False, 
-        widget=forms.TextInput(attrs={'placeholder': 'Description'}))
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False, label=False,
-        empty_label='Select Category',
-        widget=forms.Select(attrs={'placeholder': 'Category'}))
-    subcategory = forms.ModelChoiceField(queryset=Subcategory.objects.none(), required=False, label=False,
-        empty_label='Select Subcategory', 
-        widget=forms.Select(attrs={'placeholder': 'Subcategory'}))
-    
-    def __init__(self, *args, **kwargs):
-        super(ItemFilterForm, self).__init__(*args, **kwargs)
-        self.fields['subcategory'].queryset = Subcategory.objects.none()
-
-        if 'category' in self.data:
-            try:
-                category_id = int(self.data.get('category'))
-                self.fields['subcategory'].queryset = Subcategory.objects.filter(category_id=category_id).order_by('name')
-            except (ValueError, TypeError):
-                pass
 
 
 class PurchaseRecordFilterForm(forms.Form):

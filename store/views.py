@@ -41,10 +41,6 @@ def load_subcategories(request):
         subcategories = Subcategory.objects.none()
     return JsonResponse(list(subcategories.values('id', 'name')), safe=False)
 
-    category_id = request.GET.get('category_id')
-    subcategories = Subcategory.objects.filter(category_id=category_id).order_by('name')
-    return JsonResponse(list(subcategories.values('id', 'name')), safe=False)
-
 
 @login_required
 def supplier_list(request):
@@ -100,13 +96,15 @@ def item_list(request):
     form = ItemFilterForm(request.GET or None)
     items = Item.objects.all().order_by('id')
 
-    if form.is_valid():
-        if form.cleaned_data['description']:
+    #if form.is_valid():
+    if form.is_valid() and request.method == 'GET':
+        if form.cleaned_data.get('description'):
             items = items.filter(description__icontains=form.cleaned_data['description'])
-        if form.cleaned_data['category']:
+        if form.cleaned_data.get('category'):
             items = items.filter(category=form.cleaned_data['category'])
-        if form.cleaned_data['subcategory']:
+        if form.cleaned_data.get('subcategory'):
             items = items.filter(subcategory=form.cleaned_data['subcategory'])
+
 
     paginator = Paginator(items, 20)  # Show 10 items per page
     page = request.GET.get('page')
@@ -117,7 +115,14 @@ def item_list(request):
     except EmptyPage:
         items = paginator.page(paginator.num_pages)
 
-    return render(request, 'store/item_list.html', {'items': items, 'form': form})
+    context = {
+        'items': items,
+        'form': form,
+        'selected_category': request.GET.get('category'),
+        'selected_subcategory': request.GET.get('subcategory'),
+    }
+
+    return render(request, 'store/item_list.html', context)
 
 
 def item_create(request):

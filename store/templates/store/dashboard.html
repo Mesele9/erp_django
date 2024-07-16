@@ -64,24 +64,4 @@
     {% endfor %}
 </table>
 
-<h2>Items</h2>
-<table>
-    <tr>
-        <th>Description</th>
-        <th>Category</th>
-        <th>Unit of Measurement</th>
-        <th>Current Unit Price</th>
-        <th>Stock Balance</th>
-    </tr>
-    {% for item in items %}
-    <tr>
-        <td>{{ item.description }}</td>
-        <td>{{ item.category }}</td>
-        <td>{{ item.unit_of_measurement }}</td>
-        <td>{{ item.current_unit_price }}</td>
-        <td>{{ item.stock_balance }}</td>
-    </tr>
-    {% endfor %}
-</table>
-
 {% endblock %}

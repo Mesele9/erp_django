@@ -32,8 +32,8 @@ def login_view(request):
             elif user.is_superuser:
                 return redirect('admin_dashboard')
         else:
-            return render(request, 'common_user/login.html', {'error': 'Invalid username or password'})
-            messages.error(request, 'Invalid username or password')
+            messages.info(request, 'Invalid username or password.')
+            return render(request, 'common_user/login.html')
     return render(request, 'common_user/login.html')
 
 
