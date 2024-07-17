@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     #'django_humanize',
     'import_export',
     'django_select2',
-    'bootstrap4',
+    #'bootstrap4',
 
     'employee_management',
     'store',

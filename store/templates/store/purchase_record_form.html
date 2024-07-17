@@ -1,18 +1,17 @@
 {% extends "store_base.html" %}
-{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="container col-md-6">
-    <h2>New Purchase Record</h2>
+    <h2>{% if form.instance.pk %}Edit Purchase Record{% else %}New Purchase Record{% endif %}</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form|crispy }}
+        {{ form.as_p }}
         {{ formset.management_form }}
         <h3>Items</h3>
         <div id="formset-container">
             {% for form in formset %}
                 <div class="formset-item">
-                    {{ form|crispy }}
+                    {{ form.as_p }}
                     <button type="button" class="remove-item btn btn-warning">Remove</button>
                 </div>
             {% endfor %}
@@ -114,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Template for empty form -->
 <script type="text/template" id="empty-form">
     <div class="formset-item">
-        {{ formset.empty_form|crispy }}
+        {{ formset.empty_form }}
         <button type="button" class="remove-item btn btn-warning">Remove</button>
     </div>
 </script>

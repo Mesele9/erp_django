@@ -1,5 +1,4 @@
 {% extends 'store_base.html' %}
-{% load crispy_forms_tags %}
 {% load humanize %}
 {% block title %}Issue Records{% endblock %}
 
@@ -10,10 +9,10 @@
 
 <form method="get" class="mb-3">
     <div class="form-row">
-        <div class="col">{{ form.date_from|as_crispy_field }}</div>
-        <div class="col">{{ form.date_to| as_crispy_field }}</div>
+        <div class="col">{{ form.date_from }}</div>
+        <div class="col">{{ form.date_to }}</div>
         <div class="col">
-            {{ form.voucher_number|as_crispy_field }}
+            {{ form.voucher_number }}
         </div>
         <div class="col">
             <button type="submit" class="btn btn-primary">Filter</button>

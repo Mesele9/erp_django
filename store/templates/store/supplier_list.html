@@ -1,5 +1,4 @@
 {% extends 'store_base.html' %}
-{% load crispy_forms_tags %}
 
 {% block title %}Suppliers List{% endblock %}
 
@@ -11,10 +10,10 @@
 <form method="get" class="mb-3">
     <div class="form-row">
         <div class="col">
-            {{ form.name|as_crispy_field }}
+            {{ form.name }}
         </div>
         <div class="col">
-            {{ form.tin_number|as_crispy_field }}
+            {{ form.tin_number }}
         </div>
         <div class="col">
             <button type="submit" class="btn btn-primary">Filter</button>

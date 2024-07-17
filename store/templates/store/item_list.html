@@ -1,5 +1,5 @@
 {% extends 'store_base.html' %}
-{% load crispy_forms_tags %}
+
 
 {% block title %}Item List{% endblock %}
 
@@ -8,16 +8,15 @@
 <a href="{% url 'item_create' %}" class="btn btn-primary mb-3"><i class="fas fa-plus"></i> Add New Item</a>
 
 <form method="get" class="mb-3">
-
      <div class="form-row">
         <div class="col">
-            {{ form.description|as_crispy_field }}
+            {{ form.description }}
         </div>
         <div class="col">
-            {{ form.category|as_crispy_field }}
+            {{ form.category }}
         </div>
         <div class="col">
-            {{ form.subcategory|as_crispy_field }}
+            {{ form.subcategory }}
         </div>
         <div class="col">
             <button type="submit" class="btn btn-primary">Filter</button>

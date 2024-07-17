@@ -50,7 +50,7 @@ class Item(models.Model):
         ('m', 'Meter'),
     ]
     
-    description = models.CharField(max_length=255, db_index=True)
+    description = models.CharField(max_length=255, unique=True, db_index=True)
     category = models.ForeignKey(Category, related_name='items', on_delete=models.CASCADE, db_index=True)
     subcategory = models.ForeignKey(Subcategory, related_name='items', on_delete=models.CASCADE, null=True, blank=True, db_index=True)
     unit_of_measurement = models.CharField(max_length=50, choices=UNIT_OF_MEASUREMENT_CHOICES)
