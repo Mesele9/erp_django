@@ -1,6 +1,6 @@
 <!-- templates/inventory/purchase_record_detail.html -->
 {% extends 'store_base.html' %}
-
+{% load humanize %}
 {% block title %}Purchase Record Details{% endblock %}
 
 {% block content %}
@@ -9,7 +9,7 @@
 <p><strong>Voucher Number:</strong> {{ purchase_record.voucher_number }}</p>
 <p><strong>Supplier:</strong> {{ purchase_record.supplier }}</p>
 <p><strong>Purchaser:</strong> {{ purchase_record.purchaser }}</p>
-<p><strong>Total Amount:</strong> {{ purchase_record.total_value }}</p>
+<p><strong>Total Amount:</strong> {{ purchase_record.total_value|intcomma }}</p>
 <!--  <p><strong>Receipt:</strong> <a href="{{ purchase_record.upload_receipt }}" target="_blank">View Receipt</a></p>  -->
 
 <h3>Items</h3>
@@ -26,9 +26,9 @@
         {% for item in purchase_record.items.all %}
         <tr>
             <td>{{ item.item.description }}</td>
-	    <td>{{ item.quantity }} {{ item.item.unit_of_measurement }}</td>
-            <td>{{ item.unit_price }}</td>
-            <td>{{ item.total_price }}</td>
+	    <td>{{ item.quantity|intcomma }} {{ item.item.unit_of_measurement }}</td>
+            <td>{{ item.unit_price|intcomma }}</td>
+            <td>{{ item.total_price|intcomma }}</td>
         </tr>
         {% endfor %}
     </tbody>

@@ -1,4 +1,5 @@
 {% extends 'store_base.html' %}
+{% load humanize %}
 
 {% block content %}
   <h2>Items Purchased Report</h2>
@@ -29,8 +30,8 @@
           <td>{{ item.purchase_record__date }}</td>
           <td>{{ item.purchase_record__voucher_number }}</td>
           <td>{{ item.purchase_record__supplier__name }}</td>
-          <td>{{ item.total_quantity }}</td>
-          <td>{{ item.total_price }}</td>
+          <td>{{ item.total_quantity|intcomma }}</td>
+          <td>{{ item.total_price|intcomma }}</td>
         </tr>
       {% endfor %}
     </tbody>

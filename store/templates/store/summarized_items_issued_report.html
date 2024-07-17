@@ -1,5 +1,5 @@
 {% extends 'store_base.html' %}
-
+{% load humanize %}
 {% block content %}
   <h2>Summarized Items Issued Report</h2>
   <form method="get">
@@ -22,7 +22,7 @@
           <td>{{ item.item__description }}</td>
           <td>{{ item.item__category__name }}</td>
           <td>{{ item.item__subcategory__name }}</td>
-          <td>{{ item.total_quantity }}</td>
+          <td>{{ item.total_quantity|intcomma }}</td>
         </tr>
       {% endfor %}
     </tbody>

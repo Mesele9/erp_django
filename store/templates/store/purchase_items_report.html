@@ -1,6 +1,6 @@
 <!-- templates/purchase_report.html -->
 {% extends 'store_base.html' %}
-
+{% load humanize %}
 {% block content %}
 <h1>Purchase Report</h1>
 
@@ -21,8 +21,8 @@
         {% for data in report_data %}
         <tr>
             <td>{{ data.item_description }}</td>
-            <td>{{ data.total_quantity }}</td>
-            <td>${{ data.total_value }}</td>
+            <td>{{ data.total_quantity|intcomma }}</td>
+            <td>${{ data.total_value|intcomma }}</td>
         </tr>
         {% empty %}
         <tr>

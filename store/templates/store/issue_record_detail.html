@@ -1,6 +1,6 @@
 <!-- templates/inventory/issue_record_detail.html -->
 {% extends 'store_base.html' %}
-
+{% load humanize %}
 {% block title %}Issue Record Details{% endblock %}
 
 {% block content %}
@@ -10,7 +10,7 @@
 <p><strong>Department:</strong> {{ issue_record.department }}</p>
 <p><strong>Issued By:</strong> {{ issue_record.issued_by }}</p>
 <p><strong>Received By:</strong> {{ issue_record.received_by }}</p>
-<p><strong>Total Amount:</strong> {{ issue_record.total_value }}</p>
+<p><strong>Total Amount:</strong> {{ issue_record.total_value|intcomma }}</p>
 
 
 <h3>Items</h3>
@@ -27,9 +27,9 @@
         {% for item in issue_record.items.all %}
         <tr>
             <td>{{ item.item.description }}</td>
-	    <td>{{ item.quantity }} {{ item.item.unit_of_measurement }}</td>
-            <td>{{ item.unit_price }}</td>
-            <td>{{ item.total_price }}</td>
+	    <td>{{ item.quantity|intcomma }} {{ item.item.unit_of_measurement }}</td>
+            <td>{{ item.unit_price|intcomma }}</td>
+            <td>{{ item.total_price|intcomma }}</td>
         </tr>
         {% endfor %}
     </tbody>

@@ -1,6 +1,6 @@
 {% extends 'store_base.html' %}
 {% load crispy_forms_tags %}
-
+{% load humanize %}
 {% block title %}Issue Records{% endblock %}
 
 {% block content %}
@@ -41,7 +41,7 @@
             <td>{{ issue_record.department }}</td>
             <td>{{ issue_record.issued_by }}</td>
             <td>{{ issue_record.received_by }}</td>
-            <td>{{ issue_record.total_value }}</td>
+            <td>{{ issue_record.total_value|intcomma }}</td>
             <td>
                 <a href="{% url 'issue_record_edit' issue_record.pk %}" class="btn btn-warning btn-sm">Edit</a>
                 <a href="{% url 'issue_record_delete' issue_record.pk %}" class="btn btn-danger btn-sm ml-2">Delete</a>

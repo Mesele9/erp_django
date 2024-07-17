@@ -1,5 +1,6 @@
 {% extends 'store_base.html' %}
 {% load crispy_forms_tags %}
+{% load humanize %}
 
 {% block title %}Purchase Records{% endblock %}
 
@@ -39,7 +40,7 @@
             <td><a href="{% url 'purchase_record_detail' purchase_record.pk %}">{{ purchase_record.voucher_number }}</a></td>
             <td>{{ purchase_record.supplier }}</td>
             <td>{{ purchase_record.purchaser }}</td>
-            <td>{{ purchase_record.total_value }}</td>
+            <td>{{ purchase_record.total_value|intcomma }}</td>
             <td>
                 <a href="{% url 'purchase_record_edit' purchase_record.pk %}" class="btn btn-warning btn-sm">Edit</a>
                 <a href="{% url 'purchase_record_delete' purchase_record.pk %}" class="btn btn-danger btn-sm ml-2">Delete</a>

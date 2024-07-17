@@ -44,10 +44,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 
     'crispy_forms',
     'crispy_bootstrap4',
-    'django_humanize',
+    #'django_humanize',
     'import_export',
     'django_select2',
     'bootstrap4',
