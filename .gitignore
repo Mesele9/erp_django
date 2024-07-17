@@ -7,5 +7,6 @@ __pycache__/
 db.sqlite3
 debug.log
 .env
+/backup/
 /media/
 */migrations/
