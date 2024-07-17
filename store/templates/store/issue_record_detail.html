@@ -20,14 +20,14 @@
             <th>Description</th>
             <th>Quantity</th>
             <th>Unit Price</th>
-            <th>Total Price</th>
+            <th>Total Cost</th>
         </tr>
     </thead>
     <tbody>
         {% for item in issue_record.items.all %}
         <tr>
             <td>{{ item.item.description }}</td>
-            <td>{{ item.quantity }}</td>
+	    <td>{{ item.quantity }} {{ item.item.unit_of_measurement }}</td>
             <td>{{ item.unit_price }}</td>
             <td>{{ item.total_price }}</td>
         </tr>
