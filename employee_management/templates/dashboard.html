@@ -73,7 +73,7 @@
                 <div class="card-body">
                     <div class="d-flex flex-wrap justify-content-around">
                         {% for data in education_data %}
-                        <a href="{% url 'hrms:employee_list' %}?education={{ data.education_level }}" class="education-box" style="background-color: {{ data.color }};">
+                        <a href="{% url 'employee_list' %}?education={{ data.education_level }}" class="education-box" style="background-color: {{ data.color }}">
                             <i class="department-icon fas fa-graduation-cap"></i>
                             <p style="font-weight: bold; color: black;">{{ data.education_level }}</p>
                             <p style="color: black;">{{ data.count }} Employees</p>
@@ -202,11 +202,6 @@
             }
         });
 
-        // Education Level Distribution
-        // Existing code for Education Level Distribution chart
-
-        // Birthday Notification
-        // Existing code for Birthday Notification
     });
 </script>
 {% endblock %}

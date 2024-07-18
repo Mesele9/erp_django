@@ -6,7 +6,7 @@
 <div class="container d-flex justify-content-center">
         <div class="col-8">
         <div class="text-center"><h3>Positions</h3></div>
-        <a href="{% url 'hrms:position_create' %}" class="btn btn-outline-primary mb-3">Add Position</a>
+        <a href="{% url 'position_create' %}" class="btn btn-outline-primary mb-3">Add Position</a>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -19,8 +19,8 @@
                 <tr>
                     <td>{{ position.name }}</td>
                     <td>
-                        <a href="{% url 'hrms:position_update' pk=position.pk %}" class="btn btn-outline-dark btn-sm" style="margin-right: 10px;">Edit</a>
-                        <a href="{% url 'hrms:position_delete' pk=position.pk %}" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this position?')">Delete</a>
+                        <a href="{% url 'position_update' pk=position.pk %}" class="btn btn-outline-dark btn-sm" style="margin-right: 10px;">Edit</a>
+                        <a href="{% url 'position_delete' pk=position.pk %}" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this position?')">Delete</a>
                     </td>
                 </tr>
                 {% endfor %}

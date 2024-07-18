@@ -13,16 +13,16 @@
             <div class="card">
                 <div class="card-header bg-dark text-light d-flex justify-content-between align-items-center">
                     <div>{% if previous_employee %}
-                        <a href="{% url 'hrms:employee_detail' previous_employee.id %}" class="btn btn-outline-light" style="margin-right: 10px;"><</a>
+                        <a href="{% url 'employee_detail' previous_employee.id %}" class="btn btn-outline-light" style="margin-right: 10px;"><</a>
                         {% endif %}
                         {% if next_employee %}
-                        <a href="{% url 'hrms:employee_detail' next_employee.id %}" class="btn btn-outline-light">></a>
+                        <a href="{% url 'employee_detail' next_employee.id %}" class="btn btn-outline-light">></a>
                         {% endif %}
                     </div>
                     <div class="text-center">{{ employee.first_name}} Profile</div>
                     <div>
-                        <a href="{% url 'hrms:employee_update' employee.pk %}" class="btn btn-outline-light btn-sm mx-1" style="margin-right: 10px;">Edit</a>
-                        <a href="{% url 'hrms:employee_delete' employee.pk %}" class="btn btn-outline-danger btn-sm mx-1" onclick="return confirm('Are you sure you want to delete this employee?')">Delete</a>
+                        <a href="{% url 'employee_update' employee.pk %}" class="btn btn-outline-light btn-sm mx-1" style="margin-right: 10px;">Edit</a>
+                        <a href="{% url 'employee_delete' employee.pk %}" class="btn btn-outline-danger btn-sm mx-1" onclick="return confirm('Are you sure you want to delete this employee?')">Delete</a>
                     </div>
                 </div>
                 
@@ -103,7 +103,7 @@
                             <h5>Documents</h5>
                             <div class="row mb-3">
                                 <div class="col-md-12">
-                                    <a href="{% url 'hrms:document_create_employee' employee_id=employee.pk %}" class="btn btn-outline-primary">Upload New Document</a>
+                                    <a href="{% url 'document_create_employee' employee_id=employee.pk %}" class="btn btn-outline-primary">Upload New Document</a>
                                 </div>
                             </div>
                             {% if documents %}
@@ -126,10 +126,10 @@
                 <hr>
                 <div class="card-footer text-muted text-center">
                     {% if previous_employee %}
-                        <a href="{% url 'hrms:employee_detail' previous_employee.id %}" class="btn btn-outline-secondary" style="margin-right: 10px;"><</a>
+                        <a href="{% url 'employee_detail' previous_employee.id %}" class="btn btn-outline-secondary" style="margin-right: 10px;"><</a>
                     {% endif %}
                     {% if next_employee %}
-                        <a href="{% url 'hrms:employee_detail' next_employee.id %}" class="btn btn-outline-secondary">></a>
+                        <a href="{% url 'employee_detail' next_employee.id %}" class="btn btn-outline-secondary">></a>
                     {% endif %}
                 </div>
             </div>

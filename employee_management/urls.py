@@ -11,7 +11,7 @@ from .views import (
     
 )
 
-app_name = 'hrms'
+#app_name = 'hrms'
 
 urlpatterns = [
     #path('accounts/login/', auth_views.LoginView.as_view(), name='login'),

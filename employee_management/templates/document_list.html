@@ -6,14 +6,14 @@
     <h3>Document List</h3>
 
     <!-- Search Form -->
-    <form method="GET" action="{% url 'hrms:document_list' %}">
+    <form method="GET" action="{% url 'document_list' %}">
         <input type="text" name="search_query" placeholder="Search by name...">
         <button type="submit">Search</button>
     </form>
 
     <!-- Upload Document Form and Button -->
     <div class="mt-4 mb-4">
-        <a href="{% url 'hrms:document_upload_form' %}" class="btn btn-outline-primary">Upload Document</a>
+        <a href="{% url 'document_upload_form' %}" class="btn btn-outline-primary">Upload Document</a>
     </div>
 
     <!-- Document Table -->
@@ -33,8 +33,8 @@
                     <td>{{ document.employee }}</td>
                     <td>{{ document.date_uploaded }}</td>
                     <td>
-                        <a href="{% url 'hrms:document_update' document.pk %}" class="btn btn-sm btn-outline-primary" style="margin-right: 10px;">Edit</a>
-                        <a href="{% url 'hrms:document_delete' document.pk %}" class="btn btn-sm btn-outline-danger" onclick="confirmDelete('{{ document.name }}', '{{ document.pk }}')">Delete</a>
+                        <a href="{% url 'document_update' document.pk %}" class="btn btn-sm btn-outline-primary" style="margin-right: 10px;">Edit</a>
+                        <a href="{% url 'document_delete' document.pk %}" class="btn btn-sm btn-outline-danger" onclick="confirmDelete('{{ document.name }}', '{{ document.pk }}')">Delete</a>
                     </td>
                 </tr>
             {% empty %}

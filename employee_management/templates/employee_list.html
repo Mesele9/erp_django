@@ -4,11 +4,11 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-3">
-            <a href="{% url 'hrms:employee_create' %}" class="btn btn-outline-primary mb-3">Add Employee</a>
+            <a href="{% url 'employee_create' %}" class="btn btn-outline-primary mb-3">Add Employee</a>
         </div>
         
         <div class="col-md-9">
-            <form class="d-flex" method="GET" action="{% url 'hrms:employee_list' %}">
+            <form class="d-flex" method="GET" action="{% url 'employee_list' %}">
                 <input class="form-control me-2" type="search" placeholder="Search by name" aria-label="Search" name="q" value="{{ request.GET.q }}">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
@@ -18,7 +18,7 @@
     <div class="row">
         <div class="col-md-12">
             <label for="department-filter">Filter by Department:</label>
-            <form method="GET" action="{% url 'hrms:employee_list' %}" id="department-filter-form">
+            <form method="GET" action="{% url 'employee_list' %}" id="department-filter-form">
                 <select class="form-select mb-3" id="department-filter" name="department">
                     <option value="">All Departments</option>
                     {% for department in departments %}
@@ -38,9 +38,9 @@
                 Employee Status
             </button>
             <div class="dropdown-menu" style="background-color: #159b3d; color: white;">
-                <a class="dropdown-item" href="{% url 'hrms:employee_list' %}">Active</a>
-                <a class="dropdown-item" href="{% url 'hrms:employee_list' %}?status=inactive">Inactive</a>
-                <a class="dropdown-item" href="{% url 'hrms:employee_list' %}?status=all">All</a>
+                <a class="dropdown-item" href="{% url 'employee_list' %}">Active</a>
+                <a class="dropdown-item" href="{% url 'employee_list' %}?status=inactive">Inactive</a>
+                <a class="dropdown-item" href="{% url 'employee_list' %}?status=all">All</a>
             </div>
         </div>
     </div>
@@ -59,12 +59,12 @@
             <tbody id="employee-table-body">
                 {% for employee in employees %}
                 <tr data-department-id="{{ employee.department.id }}">
-                    <td><a href="{% url 'hrms:employee_detail' employee.pk %}">{{ employee.first_name }} {{ employee.middle_name }}</a></td>
+                    <td><a href="{% url 'employee_detail' employee.pk %}">{{ employee.first_name }} {{ employee.middle_name }}</a></td>
                     <td>{{ employee.position }}</td>
                     <td>{{ employee.department.name }}</td>
                     <td>{{ employee.period_of_service }}</td>
                     <td>
-                        <a href="{% url 'hrms:employee_update' employee.pk %}" class="btn btn-outline-dark btn-sm" style="margin-right: 10px;">Edit</a>
+                        <a href="{% url 'employee_update' employee.pk %}" class="btn btn-outline-dark btn-sm" style="margin-right: 10px;">Edit</a>
                     </td>
                 </tr>
                 {% endfor %}

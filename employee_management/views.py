@@ -50,6 +50,8 @@ def hr_dashboard(request):
     }
 
     return render(request, 'dashboard.html', context)
+
+
 @login_required
 def employee_list(request):
     all_employees = Employee.objects.all().order_by('id')
@@ -66,14 +68,14 @@ def employee_list(request):
         employees = active_employees
 
     # Search functionality
-    search_query = request.GET.get('q')
+    search_query = request.GET.get('q', '')
     if search_query:
         employees = employees.filter(first_name__icontains=search_query)
 
     # Department filter
-    department_filter = request.GET.get('department')
-    if department_filter:
-        employees = employees.filter(department_id=department_filter)
+    selected_department = request.GET.get('department', None)
+    if selected_department:
+        employees = employees.filter(department_id=selected_department)
 
     # Educational level filter
     education_filter = request.GET.get('education')
@@ -89,7 +91,7 @@ def employee_list(request):
             employee.period_of_service = "N/A"
 
     # paginator
-    paginator = Paginator(employees, 10)  # Show 10 employees per page
+    paginator = Paginator(employees, 15)  # Show 15 employees per page
     page_number = request.GET.get('page')
     try:
         page_obj = paginator.get_page(page_number)
@@ -103,7 +105,7 @@ def employee_list(request):
         'departments': departments,
         'status_filter': status_filter,
         'search_query': search_query,
-        'department_filter': department_filter,
+        'selected_department': selected_department,
         'education_filter': education_filter,
         'is_paginated': True,
     }

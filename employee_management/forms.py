@@ -44,6 +44,10 @@ class EmployeeForm(forms.ModelForm):
             'picture': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
+class EmployeeFilterForm(forms.Form):
+    department = forms.ModelChoiceField(queryset=Department.objects.all(), required=False)
+    search = forms.CharField(required=False)
+
 
 class DocumentForm(forms.ModelForm):
     class Meta:
@@ -66,7 +70,4 @@ class DocumentForm(forms.ModelForm):
             self.fields['employee'].queryset = Employee.objects.filter(is_active=True)
 
 
-class EmployeeFilterForm(forms.Form):
-    department = forms.ModelChoiceField(queryset=Department.objects.all(), required=False)
-    search = forms.CharField(required=False)
 

@@ -126,7 +126,7 @@
         </div>
         <hr>
         <button type="submit" class="btn btn-outline-primary" style="margin-right: 10px;">{% if employee %}Save Changes{% else %}Register Employee{% endif %}</button>
-        <a href="{% url 'hrms:employee_list' %}" class="btn btn-outline-secondary ml-2">Cancel</a>
+        <a href="{% url 'employee_list' %}" class="btn btn-outline-secondary ml-2">Cancel</a>
     </form>
 </div>
 {% endblock %}
