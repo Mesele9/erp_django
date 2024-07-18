@@ -13,11 +13,13 @@ class Supplier(models.Model):
     def __str__(self):
         return self.name
 
+
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
+
 
 class Subcategory(models.Model):
     name = models.CharField(max_length=100)
@@ -63,6 +65,7 @@ class Item(models.Model):
     
     def __str__(self):
         return self.description
+
 
 class PurchaseRecord(models.Model):
     date = models.DateField(default=timezone.now, db_index=True)
@@ -114,6 +117,7 @@ class PurchaseRecordItem(models.Model):
     def __str__(self):
         return f'{self.quantity} x {self.item.description}'
 
+
 class IssueRecord(models.Model):
     date = models.DateField(default=timezone.now, db_index=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, db_index=True)
@@ -132,6 +136,7 @@ class IssueRecord(models.Model):
                 item.item.stock_balance += item.quantity
                 item.item.save()
             super().delete(using=using, keep_parents=keep_parents)
+
 
 class IssueRecordItem(models.Model):
     issue_record = models.ForeignKey(IssueRecord, related_name='items', on_delete=models.CASCADE, db_index=True)

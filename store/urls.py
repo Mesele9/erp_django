@@ -33,19 +33,12 @@ urlpatterns = [
     path('issue/<int:pk>/delete/', views.issue_record_delete, name='issue_record_delete'),
     
     # Report URL
-    path('generate-report/', views.generate_report, name='generate_report'),
-    path('purchase-report/', views.purchase_report, name='purchase_report'),
-    path('issue-report/', views.issue_report, name='issue_report'),
-    #path('purchase-items-report/', views.purchase_items_report, name='purchase_items_report'),
-    #path('issue-items-report/', views.issue_items_report, name='issue_items_report'),
-
     path('items-purchased-report/', views.items_purchased_report, name='items_purchased_report'),
     path('items-issued-report/', views.items_issued_report, name='items_issued_report'),
-
     path('reports/summarized-purchased/', views.summarized_items_purchased_report, name='summarized_items_purchased_report'),
     path('reports/summarized-issued/', views.summarized_items_issued_report, name='summarized_items_issued_report'),
 
-    #path('load_subcategories/', views.load_subcategories, name='load_subcategories'),
+    # Ajax search API
     path('ajax/load-subcategories/', views.load_subcategories, name='ajax_load_subcategories'),
     path('search-items/', views.search_items, name='search_items'),
     

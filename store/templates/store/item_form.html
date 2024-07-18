@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container col-md-6">
-<h2>{% if form.instance.pk %}Edit Item{% else %}Add New Item{% endif %}</h2>
+<h2>{% if form.instance.pk %}Edit {{ form.instance.description }}{% else %}Add New Item{% endif %}</h2>
 <form method="post" class="mb-3">
     {% csrf_token %}
     {{ form.as_p }}

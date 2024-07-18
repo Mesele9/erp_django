@@ -4,7 +4,7 @@
 
 {% block content %}
   <div class="container col-md-6">
-  <h2>{% if form.instance.pk %}Edit Supplier{% else %}New Supplier{% endif %}</h2>
+  <h2>{% if form.instance.pk %}Edit Supplier {{ form.instance.name }}{% else %}Add New Supplier{% endif %}</h2>
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

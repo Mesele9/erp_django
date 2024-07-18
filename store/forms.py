@@ -27,20 +27,6 @@ class SupplierFilterForm(forms.Form):
     tin_number = forms.CharField(required=False, label=False, 
         widget=forms.TextInput(attrs={'placeholder': 'Tin Number', 'class': 'form-control'}))
 
-""" 
-class SupplierForm(forms.ModelForm):
-    class Meta:
-        model = Supplier
-        fields = ['name', 'contact_person', 'phone_number', 'address', 'tin_number']
-
-
-class SupplierFilterForm(forms.Form):
-    name = forms.CharField(required=False, label=False, 
-        widget=forms.TextInput(attrs={'placeholder': 'Supplier Name'}))
-    tin_number = forms.CharField(required=False, label=False, 
-        widget=forms.TextInput(attrs={'placeholder': 'Tin Number'}))
- """
-
 
 class ItemForm(forms.ModelForm):
     category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label='Select Category', required=True, widget=forms.Select(attrs={'class': 'form-control'}))
@@ -175,69 +161,13 @@ class IssueRecordFilterForm(forms.Form):
         widget=forms.TextInput(attrs={'placeholder': 'Voucher Number', 'class': 'form-control'}))
 
 
-class ReportForm(forms.Form):
-    TRANSACTION_CHOICES = [
-        ('', 'All'),
-        ('purchase', 'Purchase'),
-        ('issue', 'Issue'),
-    ]
-
-    start_date = forms.DateField(label='Start Date', widget=forms.DateInput(attrs={'type': 'date'}))
-    end_date = forms.DateField(label='End Date', widget=forms.DateInput(attrs={'type': 'date'}))
-    transaction_type = forms.ChoiceField(choices=TRANSACTION_CHOICES, label='Transaction Type', required=False)
-    department = forms.CharField(max_length=100, label='Department', required=False)
-    supplier = forms.CharField(max_length=255, label='Supplier', required=False)
-
-    def clean(self):
-        cleaned_data = super().clean()
-        start_date = cleaned_data.get('start_date')
-        end_date = cleaned_data.get('end_date')
-
-        if start_date and end_date and start_date > end_date:
-            raise forms.ValidationError("End date must be after start date.")
-
-        return cleaned_data
-
-
-class PurchaseReportForm(forms.Form):
-    start_date = forms.DateField(label='Start Date', widget=forms.DateInput(attrs={'type': 'date'}))
-    end_date = forms.DateField(label='End Date', widget=forms.DateInput(attrs={'type': 'date'}))
-    purchaser = forms.CharField(max_length=100, label='Purchaser', required=False)
-    supplier = forms.CharField(max_length=255, label='Supplier', required=False)
-
-    def clean(self):
-        cleaned_data = super().clean()
-        start_date = cleaned_data.get('start_date')
-        end_date = cleaned_data.get('end_date')
-
-        if start_date and end_date and start_date > end_date:
-            raise forms.ValidationError("End date must be after start date.")
-
-        return cleaned_data
-
-
-class IssueReportForm(forms.Form):
-    start_date = forms.DateField(label='Start Date', widget=forms.DateInput(attrs={'type': 'date'}))
-    end_date = forms.DateField(label='End Date', widget=forms.DateInput(attrs={'type': 'date'}))
-    department = forms.CharField(max_length=100, label='Department', required=False)
-
-    def clean(self):
-        cleaned_data = super().clean()
-        start_date = cleaned_data.get('start_date')
-        end_date = cleaned_data.get('end_date')
-
-        if start_date and end_date and start_date > end_date:
-            raise forms.ValidationError("End date must be after start date.")
-
-        return cleaned_data
-
-
 class ItemsPurchasedReportForm(forms.Form):
     date_from = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
     date_to = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
     voucher_number = forms.CharField(required=False)
     supplier = forms.ModelChoiceField(queryset=Supplier.objects.all(), required=False)
     description = forms.CharField(required=False)
+
 
 class ItemsIssuedReportForm(forms.Form):
     date_from = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
@@ -251,6 +181,7 @@ class SummarizedItemsPurchasedReportForm(forms.Form):
     date_from = forms.DateField(required=False, widget=forms.TextInput(attrs={'type': 'date'}))
     date_to = forms.DateField(required=False, widget=forms.TextInput(attrs={'type': 'date'}))
     supplier = forms.ModelChoiceField(queryset=Supplier.objects.all(), required=False)
+
 
 class SummarizedItemsIssuedReportForm(forms.Form):
     date_from = forms.DateField(required=False, widget=forms.TextInput(attrs={'type': 'date'}))

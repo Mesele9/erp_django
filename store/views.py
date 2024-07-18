@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F, Sum, Q, Avg
 from .models import Item, PurchaseRecord, PurchaseRecordItem, IssueRecord, IssueRecordItem, Subcategory, Supplier
-from .forms import IssueRecordFilterForm, IssueReportForm, ItemForm, ItemFilterForm, ItemsIssuedReportForm, ItemsPurchasedReportForm, PurchaseRecordFilterForm, PurchaseRecordForm, PurchaseRecordItemFormSet, IssueRecordForm, IssueRecordItemFormSet, PurchaseReportForm, ReportForm, SummarizedItemsIssuedReportForm, SummarizedItemsPurchasedReportForm, SupplierForm, SupplierFilterForm
+from .forms import IssueRecordFilterForm, ItemForm, ItemFilterForm, ItemsIssuedReportForm, ItemsPurchasedReportForm, PurchaseRecordFilterForm, PurchaseRecordForm, PurchaseRecordItemFormSet, IssueRecordForm, IssueRecordItemFormSet, SummarizedItemsIssuedReportForm, SummarizedItemsPurchasedReportForm, SupplierForm, SupplierFilterForm
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
@@ -96,7 +96,6 @@ def item_list(request):
     form = ItemFilterForm(request.GET or None)
     items = Item.objects.all().order_by('id')
 
-    #if form.is_valid():
     if form.is_valid() and request.method == 'GET':
         if form.cleaned_data.get('description'):
             items = items.filter(description__icontains=form.cleaned_data['description'])
@@ -106,7 +105,7 @@ def item_list(request):
             items = items.filter(subcategory=form.cleaned_data['subcategory'])
 
 
-    paginator = Paginator(items, 20)  # Show 10 items per page
+    paginator = Paginator(items, 25)  # Show 25 items per page
     page = request.GET.get('page')
     try:
         items = paginator.page(page)
@@ -135,6 +134,7 @@ def item_create(request):
         form = ItemForm()
     return render(request, 'store/item_form.html', {'form': form})
 
+
 def item_edit(request, pk):
     item = get_object_or_404(Item, pk=pk)
     if request.method == 'POST':
@@ -145,6 +145,7 @@ def item_edit(request, pk):
     else:
         form = ItemForm(instance=item)
     return render(request, 'store/item_form.html', {'form': form})
+
 
 def item_delete(request, pk):
     item = Item.objects.get(pk=pk)
@@ -166,7 +167,7 @@ def purchase_record_list(request):
         if form.cleaned_data['voucher_number']:
             purchase_records = purchase_records.filter(voucher_number__icontains=form.cleaned_data['voucher_number'])
 
-    paginator = Paginator(purchase_records, 10)  # Show 10 records per page
+    paginator = Paginator(purchase_records, 20)  # Show 20 records per page
     page = request.GET.get('page')
     try:
         purchase_records = paginator.page(page)
@@ -237,7 +238,7 @@ def issue_record_list(request):
         if form.cleaned_data['voucher_number']:
             issue_records = issue_records.filter(voucher_number__icontains=form.cleaned_data['voucher_number'])
 
-    paginator = Paginator(issue_records, 10)  # Show 10 records per page
+    paginator = Paginator(issue_records, 20)  # Show 20 records per page
     page = request.GET.get('page')
     try:
         issue_records = paginator.page(page)
@@ -296,100 +297,6 @@ def issue_record_delete(request, pk):
     return render(request, 'store/issue_record_confirm_delete.html', {'issue_record': issue_record})
 
 
-def generate_report(request):
-    form = ReportForm(request.GET or None)
-    report_data = []
-
-    if form.is_valid():
-        start_date = form.cleaned_data['start_date']
-        end_date = form.cleaned_data['end_date']
-        transaction_type = form.cleaned_data['transaction_type']
-        department = form.cleaned_data['department']
-        supplier = form.cleaned_data['supplier']
-
-        # Prepare filters based on form input
-        filters = Q(date__gte=start_date, date__lte=end_date)
-
-        if transaction_type:
-            filters &= Q()  # Add filter for transaction type (purchase or issue)
-
-        if department:
-            filters &= Q()  # Add filter for department
-
-        if supplier:
-            filters &= Q()  # Add filter for supplier
-
-        # Query database based on filters
-        if transaction_type == 'purchase' or not transaction_type:
-            purchase_records = PurchaseRecord.objects.filter(filters).order_by('date')
-            report_data.extend(purchase_records)
-
-        if transaction_type == 'issue' or not transaction_type:
-            issue_records = IssueRecord.objects.filter(filters).order_by('date')
-            report_data.extend(issue_records)
-
-    context = {
-        'form': form,
-        'report_data': report_data,
-    }
-    for r in report_data:
-        print(r)
-
-    return render(request, 'store/report.html', context)
-
-
-
-def purchase_report(request):
-    form = PurchaseReportForm(request.GET or None)
-    report_data = []
-
-    if form.is_valid():
-        start_date = form.cleaned_data['start_date']
-        end_date = form.cleaned_data['end_date']
-        purchaser = form.cleaned_data['purchaser']
-        supplier = form.cleaned_data['supplier']
-
-        filters = Q(date__gte=start_date, date__lte=end_date)
-        if purchaser:
-            filters &= Q(purchaser=purchaser)
-        if supplier:
-            filters &= Q(supplier__name=supplier)
-
-        purchase_records = PurchaseRecord.objects.filter(filters).order_by('date')
-        report_data.extend(purchase_records)
-
-    context = {
-        'form': form,
-        'report_data': report_data,
-    }
-
-    return render(request, 'store/purchase_report.html', context)
-
-
-def issue_report(request):
-    form = IssueReportForm(request.GET or None)
-    report_data = []
-
-    if form.is_valid():
-        start_date = form.cleaned_data['start_date']
-        end_date = form.cleaned_data['end_date']
-        department = form.cleaned_data['department']
-
-        filters = Q(date__gte=start_date, date__lte=end_date)
-        if department:
-            filters &= Q(department=department)
-
-        issue_records = IssueRecord.objects.filter(filters).order_by('date')
-        report_data.extend(issue_records)
-
-    context = {
-        'form': form,
-        'report_data': report_data,
-    }
-
-    return render(request, 'store/issue_report.html', context)
-
-
 def items_purchased_report(request):
     form = ItemsPurchasedReportForm(request.GET or None)
     report_data = []
@@ -429,6 +336,7 @@ def items_purchased_report(request):
         'form': form,
         'report_data': report_data,
     })
+
 
 def items_issued_report(request):
     form = ItemsIssuedReportForm(request.GET or None)
