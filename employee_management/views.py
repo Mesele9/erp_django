@@ -120,7 +120,7 @@ def employee_create(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Employee Added successfully.')
-            return redirect('hrms:employee_list')
+            return redirect('employee_list')
     else:
         form = EmployeeForm()
     return render(request, 'employee_form.html', {'form': form})
@@ -134,7 +134,7 @@ def employee_update(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Employee updated successfully.')
-            return redirect('hrms:employee_list')
+            return redirect('employee_list')
     else:
         form = EmployeeForm(instance=employee)
     return render(request, 'employee_form.html', {'form': form, 'employee':employee})
@@ -145,7 +145,7 @@ def employee_delete(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
     employee.delete()
     messages.success(request, 'Employee deleted successfully.')
-    return redirect('hrms:employee_list')
+    return redirect('employee_list')
 
 
 @login_required
@@ -180,7 +180,7 @@ def department_create(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Department created successfully.')
-            return redirect('hrms:department_list')
+            return redirect('department_list')
     else:
         form = DepartmentForm()
     return render(request, 'department_form.html', {'form': form})
@@ -194,7 +194,7 @@ def department_update(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Department updated successfully.')
-            return redirect('hrms:department_list')
+            return redirect('department_list')
     else:
         form = DepartmentForm(instance=department)
     return render(request, 'department_form.html', {'form': form})
@@ -205,7 +205,7 @@ def department_delete(request, pk):
     department = get_object_or_404(Department, pk=pk)
     department.delete()
     messages.success(request, 'Department deleted successfully.')
-    return redirect('hrms:department_list')
+    return redirect('department_list')
 
 
 @login_required
@@ -230,7 +230,7 @@ def position_create(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Position created successfully.')
-            return redirect('hrms:position_list')
+            return redirect('position_list')
     else:
         form = PositionForm()
     return render(request, 'position_form.html', {'form': form})
@@ -244,7 +244,7 @@ def position_update(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Position updated successfully.')
-            return redirect('hrms:position_list')
+            return redirect('position_list')
     else:
         form = PositionForm(instance=position)
     return render(request, 'position_form.html', {'form': form})
@@ -255,7 +255,7 @@ def position_delete(request, pk):
     position = get_object_or_404(Position, pk=pk)
     position.delete()
     messages.success(request, 'Position deleted successfully.')
-    return redirect('hrms:position_list')
+    return redirect('position_list')
 
 
 @login_required
@@ -298,7 +298,7 @@ def document_update(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Document updated successfully.')
-            return redirect('hrms:document_list')
+            return redirect('document_list')
     else:
         form = DocumentForm(instance=document)
     return render(request, 'document_upload_form.html', {'form': form})
@@ -309,7 +309,7 @@ def document_delete(request, pk):
     document = get_object_or_404(Document, pk=pk)
     document.delete()
     messages.success(request, 'Document deleted successfully.')
-    return redirect('hrms:document_list')
+    return redirect('document_list')
 
 
 @login_required
@@ -322,7 +322,7 @@ def document_upload_form(request, include_employee_field=True, employee=None):
                 document.employee = employee
             document.save()
             messages.success(request, 'Document uploaded successfully.')
-            return redirect('hrms:document_list')
+            return redirect('document_list')
     else:
         form = DocumentForm(include_employee_field=include_employee_field)
 

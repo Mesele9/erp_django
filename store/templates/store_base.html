@@ -37,7 +37,7 @@
                 {% if user.is_authenticated %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
                     {% if user.role == 'admin' %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'hrms:hr_dashboard' %}">HR Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'hr_dashboard' %}">HR Dashboard</a></li>
                     {% endif %}
                 {% else %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
