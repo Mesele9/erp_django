@@ -29,7 +29,9 @@
         <tbody>
             {% for document in page_obj %}
                 <tr>
-                    <td>{{ document.get_name_display }}</td>
+                    <td>
+                        <a href="{% url 'document_view' document.pk %}" target="_blank" rel="noopener noreferrer">{{ document.get_name_display }}</a>
+                    </td>
                     <td>{{ document.employee }}</td>
                     <td>{{ document.date_uploaded }}</td>
                     <td>

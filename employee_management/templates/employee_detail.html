@@ -111,7 +111,7 @@
                                     {% for document in documents %}
                                     <li>
 
-                                        <p><a href="{{ document.file.url }}" target="_blank" rel="noopener noreferrer">{{ document.get_name_display }}</a>View</p>
+                                        <p><a href="{% url 'document_view' document.pk %}" target="_blank" rel="noopener noreferrer">{{ document.get_name_display }}</a></p>
                                         <p><strong>Description:</strong> {{ document.description }}</p>
                                         <p><strong>Date Uploaded:</strong> {{ document.date_uploaded }}</p>
                                     </li>

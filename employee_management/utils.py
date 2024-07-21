@@ -1,3 +1,4 @@
+import os
 from django.utils.text import slugify
 from ethiopian_date import EthiopianDateConverter
 from datetime import timedelta, datetime, date
@@ -20,10 +21,12 @@ def document_upload_to(instance, file_name):
     raise ValueError("Employee object is not set for the Document instance.")
 
   # Create a slugified version of the file name (optional for better URL compatibility)
-  file_name = slugify(instance.file.name)
+  #file_name = slugify(instance.file.name)
+  file_base_name = os.path.basename(file_name)
+
 
   # Construct the upload path using employee ID and slugified file name
-  return f'documents/{instance.employee.id}/{file_name}'
+  return f'documents/{instance.employee.id}/{file_base_name}'
 
 
 # Convert date of  birth and calculate employees whose birthdays is comming in a week time

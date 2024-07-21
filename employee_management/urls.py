@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 from django.conf.urls.static import static
 from django.urls import path
 from .views import (
-    employee_list, employee_create, employee_update, employee_delete, employee_detail,
+    document_view, employee_list, employee_create, employee_update, employee_delete, employee_detail,
     department_list, department_create, department_update, department_delete, hr_dashboard,
     position_list, position_create, position_update, position_delete, 
     document_list, document_create, document_update, document_delete, document_upload_form,
@@ -46,5 +46,6 @@ urlpatterns = [
     path('documents/update/<int:pk>/', document_update, name='document_update'),
     path('documents/delete/<int:pk>/', document_delete, name='document_delete'),
     path('documents/upload/', document_upload_form, name='document_upload_form'),
+    path('documents/<int:pk>/view/', document_view, name='document_view'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
