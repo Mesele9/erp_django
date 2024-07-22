@@ -6,6 +6,7 @@
 {% block content %}
 <h1>Inventory Items</h1>
 <a href="{% url 'item_create' %}" class="btn btn-primary mb-3"><i class="fas fa-plus"></i> Add New Item</a>
+<a href="{% url 'export_items_to_excel' %}" class="btn btn-success mb-3">Export Items to Excel</a>
 
 <form method="get" class="mb-3">
      <div class="form-row">

@@ -41,6 +41,9 @@ urlpatterns = [
     # Ajax search API
     path('ajax/load-subcategories/', views.load_subcategories, name='ajax_load_subcategories'),
     path('search-items/', views.search_items, name='search_items'),
-    
+ 
+    # Other URLS
+    path('export_items_to_excel/', views.export_items_to_excel, name='export_items_to_excel'),
+
 ]
 

@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F, Sum, Q, Avg
+import openpyxl
 from .models import Item, PurchaseRecord, PurchaseRecordItem, IssueRecord, IssueRecordItem, Subcategory, Supplier
 from .forms import IssueRecordFilterForm, ItemForm, ItemFilterForm, ItemsIssuedReportForm, ItemsPurchasedReportForm, PurchaseRecordFilterForm, PurchaseRecordForm, PurchaseRecordItemFormSet, IssueRecordForm, IssueRecordItemFormSet, SummarizedItemsIssuedReportForm, SummarizedItemsPurchasedReportForm, SupplierForm, SupplierFilterForm
+from .resource import ItemResource
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
@@ -438,3 +440,11 @@ def summarized_items_issued_report(request):
         'form': form,
         'report_data': report_data,
     })
+
+
+def export_items_to_excel(request):
+    item_resource = ItemResource()
+    dataset = item_resource.export()
+    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="items.xlsx"'
+    return response
