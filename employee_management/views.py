@@ -12,7 +12,6 @@ from .forms import EmployeeForm, DepartmentForm, PositionForm, DocumentForm
 from .utils import is_upcoming_birthday, calculate_service_duration
 
 
-
 @login_required
 def hr_dashboard(request):
     # Total number of employees
@@ -354,11 +353,6 @@ def document_view(request, pk):
     if content_type is None:
         content_type = 'application/octet-stream'  # Default content type
     
-    # Debug print statements
-    print(f"File Name: {file_name}")
-    print(f"File Extension: {file_extension}")
-    print(f"Content Type: {content_type}")
-
     try:
         with file.open('rb') as f:
             response = HttpResponse(f.read(), content_type=content_type)
@@ -367,60 +361,4 @@ def document_view(request, pk):
     except IOError:
         raise Http404("File Not Found")
     
-    file_name = os.path.basename(file.name)  # Get the base name of the file
-    file_extension = os.path.splitext(file_name)[-1].lower().replace('.', '')  # Get the extension
-
-    # Define known MIME types
-    known_mime_types = {
-        'pdf': 'application/pdf',
-        'jpg': 'image/jpeg',
-        'jpeg': 'image/jpeg',
-        'png': 'image/png',
-        'gif': 'image/gif',
-        'txt': 'text/plain',
-        'doc': 'application/msword',
-        'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'xls': 'application/vnd.ms-excel',
-        'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'csv': 'text/csv',
-        'ppt': 'application/vnd.ms-powerpoint',
-        'pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    }
-
-    # Extract file extension and determine MIME type
-    content_type = known_mime_types.get(file_extension)
-
-    if content_type is None:
-        # Use mimetypes module if not found in known_mime_types
-        content_type, _ = mimetypes.guess_type(file.name)
-        if content_type is None:
-            content_type = 'application/octet-stream'  # Default content type
-
-    print(f"File Name: {file_name}")
-    print(f"File Extension: {file_extension}")
-    print(f"Content Type: {content_type}")
-
-
-    try:
-        with file.open('rb') as f:
-            response = HttpResponse(f.read(), content_type=content_type)
-            response['Content-Disposition'] = f'inline; filename="{document.file.name}"'
-            print(f"Content Type: {content_type}")
-
-            return response
-    except IOError:
-        raise Http404("File Not Found")
     
-
-    response = HttpResponse(file, content_type='application/pdf')  # Change content_type as needed
-    response['Content-Disposition'] = f'inline; filename="{document.file.name}"'
-    
-    return response
-
-
-
-@login_required
-def document_detail(request, pk):
-    document = get_object_or_404(Document, pk=pk)
-    file_url = document.file.url
-    return render(request, 'document_detail.html', {'document': document, 'file_url': file_url})

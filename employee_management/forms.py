@@ -57,7 +57,7 @@ class DocumentForm(forms.ModelForm):
             'name': forms.Select(attrs={'class': 'form-control'}),
             'file': forms.FileInput(attrs={'class': 'form-control-file'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
-            'employee': forms.Select(attrs={'class': 'form-control'}),
+            'employee': forms.Select(attrs={'class': 'form-control select2'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -68,6 +68,7 @@ class DocumentForm(forms.ModelForm):
             self.fields.pop('employee')  # Remove 'employee' field if not needed
         else:
             self.fields['employee'].queryset = Employee.objects.filter(is_active=True)
+
 
 
 
