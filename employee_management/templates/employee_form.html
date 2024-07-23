@@ -1,132 +1,30 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+
 {% block title %}
-    {% if form.instance.pk %}Edit {{ employee.first_name}} {{ employee.middle_name}}{% else %}Add Employee{% endif %}
+
 {% endblock %}
 
 {% block content %}
-<h3>{% if form.instance.pk %}Editing {{ employee.first_name}} {{ employee.middle_name}}{% else %}Add Employee{% endif %}</h3>
+<h3 class="text-center">
+</h3>
 <div class="container">
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    {{ form.first_name|as_crispy_field }}
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    {{ form.middle_name|as_crispy_field }}
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    {{ form.last_name|as_crispy_field }}
-                </div>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="border p-4 rounded shadow-sm">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    {{ form.as_p }}
+
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-outline-primary" style="margin-right: 10px;">
+                            {% if employee %}Save Changes{% else %}Register Employee{% endif %}
+                        </button>
+                        <a href="{% url 'employee_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="row">
-            <div class="col d-flex justify-content-center">
-                <div class="form-group">{{ form.gender|as_crispy_field }}</div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    {{ form.mobile|as_crispy_field }}
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    {{ form.email|as_crispy_field }}
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    {{ form.education_level|as_crispy_field }}
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    {{ form.department|as_crispy_field }}
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    {{ form.position|as_crispy_field }}
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    {{ form.date_of_birth|as_crispy_field }}
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    {{ form.hire_date|as_crispy_field }}
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    {{ form.salary|as_crispy_field }}
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    {{ form.pension_number|as_crispy_field }}
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    {{ form.address|as_crispy_field }}
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    {{ form.emergency_contact_name|as_crispy_field }}
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    {{ form.emergency_contact_phone|as_crispy_field }}
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="is_coc_certified" id="id_is_coc_certified" {% if form.instance.is_coc_certified %}checked{% endif %}>
-                    <label class="form-check-label" for="id_is_coc_certified">Is COC Certified</label>
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="is_active" id="id_is_active" {% if form.instance.is_active %}checked{% endif %}>
-                    <label class="form-check-label" for="id_is_active">Is Active</label>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    {{ form.picture|as_crispy_field }}
-                </div>
-            </div>
-        </div>
-        <hr>
-        <button type="submit" class="btn btn-outline-primary" style="margin-right: 10px;">{% if employee %}Save Changes{% else %}Register Employee{% endif %}</button>
-        <a href="{% url 'employee_list' %}" class="btn btn-outline-secondary ml-2">Cancel</a>
-    </form>
+    </div>
 </div>
 {% endblock %}

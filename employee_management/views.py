@@ -70,7 +70,7 @@ def employee_list(request):
         employees = active_employees
 
     # Search functionality
-    search_query = request.GET.get('q', '')
+    search_query = request.GET.get('search', '')
     if search_query:
         employees = employees.filter(first_name__icontains=search_query)
 
@@ -106,6 +106,8 @@ def employee_list(request):
         'employees': page_obj,
         'departments': departments,
         'status_filter': status_filter,
+        'search': request.GET.get('search', ''),
+        'department': request.GET.get('department', ''),
         'search_query': search_query,
         'selected_department': selected_department,
         'education_filter': education_filter,
@@ -116,6 +118,38 @@ def employee_list(request):
 
 
 @login_required
+def employee_form_view(request, pk=None):
+    if pk:
+        # Update an existing employee
+        employee = get_object_or_404(Employee, pk=pk)
+        form = EmployeeForm(request.POST or None, request.FILES or None, instance=employee)
+        if request.method == 'POST' and form.is_valid():
+            form.save()
+            messages.success(request, 'Employee updated successfully.')
+            return redirect('employee_list')
+    else:
+        # Create a new employee
+        employee = None
+        form = EmployeeForm(request.POST or None, request.FILES or None)
+        if request.method == 'POST' and form.is_valid():
+            form.save()
+            messages.success(request, 'Employee added successfully.')
+            return redirect('employee_list')
+
+    # Debugging print statements
+    print(f"Form errors: {form.errors}")
+    print(f"Form instance: {form.instance}")
+    
+
+    context = {
+        'form': form,
+        'employee': employee
+    }
+
+    return render(request, 'employee_form.html', context)
+
+
+"""@login_required
 def employee_create(request):
     if request.method == 'POST':
         form = EmployeeForm(request.POST, request.FILES)
@@ -140,7 +174,7 @@ def employee_update(request, pk):
     else:
         form = EmployeeForm(instance=employee)
     return render(request, 'employee_form.html', {'form': form, 'employee':employee})
-
+"""
 
 @login_required
 def employee_delete(request, pk):

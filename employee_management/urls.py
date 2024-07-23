@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 from django.conf.urls.static import static
 from django.urls import path
 from .views import (
-    document_view, employee_list, employee_create, employee_update, employee_delete, employee_detail,
+    document_view, employee_form_view, employee_list, employee_delete, employee_detail,
     department_list, department_create, department_update, department_delete, hr_dashboard,
     position_list, position_create, position_update, position_delete, 
     document_list, document_create, document_update, document_delete, document_upload_form,
@@ -22,8 +22,8 @@ urlpatterns = [
     
     # Employee Management
     path('employees/', employee_list, name='employee_list'),
-    path('employees/create/', employee_create, name='employee_create'),
-    path('employees/update/<int:pk>/', employee_update, name='employee_update'),
+    path('employees/create/', employee_form_view, name='employee_create'),
+    path('employees/update/<int:pk>/', employee_form_view, name='employee_update'),
     path('employees/delete/<int:pk>/', employee_delete, name='employee_delete'),
     path('employees/detail/<int:pk>/', employee_detail, name='employee_detail'),
 

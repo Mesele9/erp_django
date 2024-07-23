@@ -17,16 +17,16 @@ class PositionForm(forms.ModelForm):
 class EmployeeForm(forms.ModelForm):
     class Meta:
         model = Employee
-        fields = ['first_name', 'middle_name', 'last_name', 'gender', 'mobile',
-                  'email', 'department', 'position', 'date_of_birth', 'hire_date',
-                  'salary', 'education_level', 'address', 'pension_number',
-                  'emergency_contact_name', 'emergency_contact_phone',
-                  'is_coc_certified', 'is_active', 'picture']
+        fields = [
+            'first_name', 'middle_name', 'last_name', 'gender', 'mobile', 'email', 'department', 'position', 
+            'date_of_birth', 'hire_date', 'salary', 'education_level', 'address', 'pension_number', 
+            'emergency_contact_name', 'emergency_contact_phone', 'is_coc_certified', 'is_active', 'picture'
+        ]
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
             'middle_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Middle Name'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
-            'gender': forms.RadioSelect(),
+            'gender': forms.RadioSelect(attrs={'class': 'radio-group'}),
             'mobile': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Mobile No'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
             'department': forms.Select(attrs={'class': 'form-control'}),
@@ -35,7 +35,7 @@ class EmployeeForm(forms.ModelForm):
             'hire_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'salary': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Basic Salary'}),
             'education_level': forms.Select(attrs={'class': 'form-control'}),
-            'address': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Employee Address', 'rows':2}),
+            'address': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Employee Address'}),
             'pension_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Pension Number'}),
             'emergency_contact_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Emergency Contact Name'}),
             'emergency_contact_phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Emergency Contact Phone'}),
@@ -43,6 +43,7 @@ class EmployeeForm(forms.ModelForm):
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'picture': forms.FileInput(attrs={'class': 'form-control'}),
         }
+
 
 class EmployeeFilterForm(forms.Form):
     department = forms.ModelChoiceField(queryset=Department.objects.all(), required=False)

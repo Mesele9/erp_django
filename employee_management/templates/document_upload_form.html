@@ -4,6 +4,9 @@
 
 {% block content %}
 <div class="container">
+    <div class="row justify-content-center">
+    <div class="col-md-6">
+    <div class="border p-4 rounded shadow-sm">
     <h3>
         {% if employee %}
             Upload Document {{ employee.first_name }} {{ employee.middle_name }}
@@ -11,7 +14,6 @@
             Upload New Document
         {% endif %}
     </h3>
-    <div class="container">
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
@@ -26,6 +28,8 @@
                 {% endif %}
             
     </form>
+    </div>
+    </div>
     </div>
 </div>
 
