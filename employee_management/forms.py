@@ -43,6 +43,27 @@ class EmployeeForm(forms.ModelForm):
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'picture': forms.FileInput(attrs={'class': 'form-control'}),
         }
+        labels = {
+            'first_name': 'First Name',
+            'middle_name': 'Middle Name',
+            'last_name': 'Last Name',
+            'gender': 'Gender',
+            'mobile': 'Mobile No',
+            'email': 'Email',
+            'department': 'Department',
+            'position': 'Position',
+            'date_of_birth': 'Date of Birth',
+            'hire_date': 'Hire Date',
+            'salary': 'Basic Salary',
+            'education_level': 'Education Level',
+            'address': 'Employee Address',
+            'pension_number': 'Pension Number',
+            'emergency_contact_name': 'Emergency Contact Name',
+            'emergency_contact_phone': 'Emergency Contact Phone',
+            'is_coc_certified': 'CoC Certified',
+            'is_active': 'Active',
+            'picture': 'Picture',
+        }
 
 
 class EmployeeFilterForm(forms.Form):
