@@ -52,6 +52,9 @@ def supplier_list(request):
     if form.is_valid():
         if form.cleaned_data['name']:
             suppliers = suppliers.filter(name__icontains=form.cleaned_data['name'])
+        if form.cleaned_data['tin_number']:
+            suppliers = suppliers.filter(tin_number__icontains=form.cleaned_data['tin_number'])
+
     
     paginator = Paginator(suppliers, 10)  # Show 10 suppliers per page
     page = request.GET.get('page')
@@ -177,9 +180,9 @@ def purchase_record_list(request):
         purchase_records = paginator.page(1)
     except EmptyPage:
         purchase_records = paginator.page(paginator.num_pages)
+    
 
     return render(request, 'store/purchase_record_list.html', {'purchase_records': purchase_records, 'form': form})
-
 
 def purchase_record_detail(request, pk):
     purchase_record = get_object_or_404(PurchaseRecord, pk=pk)

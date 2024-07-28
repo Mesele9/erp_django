@@ -53,8 +53,8 @@
 <div class="pagination">
     <span class="step-links">
         {% if issue_records.has_previous %}
-            <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo; first</a>
-            <a href="?page={{ issue_records.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+            <a href="?page=1{% if form.date_from.value %}&date_from={{ form.date_from.value }}{% endif %}{% if form.date_to.value %}&date_to={{ form.date_to.value }}{% endif %}{% if form.voucher_number.value %}&voucher_number={{ form.voucher_number.value }}{% endif %}">&laquo; first</a>
+            <a href="?page={{ issue_records.previous_page_number }}{% if form.date_from.value %}&date_from={{ form.date_from.value }}{% endif %}{% if form.date_to.value %}&date_to={{ form.date_to.value }}{% endif %}{% if form.voucher_number.value %}&voucher_number={{ form.voucher_number.value }}{% endif %}">previous</a>
         {% endif %}
 
         <span class="current">
@@ -62,8 +62,8 @@
         </span>
 
         {% if issue_records.has_next %}
-            <a href="?page={{ issue_records.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
-            <a href="?page={{ issue_records.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">last &raquo;</a>
+            <a href="?page={{ issue_records.next_page_number }}{% if form.date_from.value %}&date_from={{ form.date_from.value }}{% endif %}{% if form.date_to.value %}&date_to={{ form.date_to.value }}{% endif %}{% if form.voucher_number.value %}&voucher_number={{ form.voucher_number.value }}{% endif %}">next</a>
+            <a href="?page={{ issue_records.paginator.num_pages }}{% if form.date_from.value %}&date_from={{ form.date_from.value }}{% endif %}{% if form.date_to.value %}&date_to={{ form.date_to.value }}{% endif %}{% if form.voucher_number.value %}&voucher_number={{ form.voucher_number.value }}{% endif %}">last &raquo;</a>
         {% endif %}
     </span>
 </div>
