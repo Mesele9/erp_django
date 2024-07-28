@@ -99,7 +99,10 @@ def supplier_delete(request, pk):
 @login_required
 def item_list(request):
     form = ItemFilterForm(request.GET or None)
-    items = Item.objects.all().order_by('id')
+    items = Item.objects.select_related('category', 'subcategory').only(
+        'id', 'description', 'category__name', 'subcategory__name', 'unit_of_measurement', 
+        'current_unit_price', 'stock_balance', 'minimum_stock'
+    ).order_by('id')
 
     if form.is_valid() and request.method == 'GET':
         if form.cleaned_data.get('description'):
@@ -162,7 +165,7 @@ def item_delete(request, pk):
 
 def purchase_record_list(request):
     form = PurchaseRecordFilterForm(request.GET or None)
-    purchase_records = PurchaseRecord.objects.all().order_by('-date')
+    purchase_records = PurchaseRecord.objects.select_related('supplier').prefetch_related('items')
 
     if form.is_valid():
         if form.cleaned_data['date_from']:
@@ -185,10 +188,14 @@ def purchase_record_list(request):
     return render(request, 'store/purchase_record_list.html', {'purchase_records': purchase_records, 'form': form})
 
 def purchase_record_detail(request, pk):
+    purchase_record = get_object_or_404(PurchaseRecord.objects.prefetch_related('items'), pk=pk)
+    return render(request, 'store/purchase_record_detail.html', {'purchase_record': purchase_record})
+'''
+def purchase_record_detail(request, pk):
     purchase_record = get_object_or_404(PurchaseRecord, pk=pk)
     purchase_record_items = PurchaseRecordItem.objects.filter(purchase_record=purchase_record)
     return render(request, 'store/purchase_record_detail.html', {'purchase_record': purchase_record, 'purchase_record_items': purchase_record_items})
-
+'''
 
 def purchase_record_create(request):
     if request.method == 'POST':
@@ -230,10 +237,14 @@ def purchase_record_delete(request, pk):
         return redirect('purchase_record_list')
     return render(request, 'store/purchase_record_confirm_delete.html', {'purchase_record': purchase_record})
 
+from django.db.models import Prefetch
 
 def issue_record_list(request):
     form = IssueRecordFilterForm(request.GET or None)
-    issue_records = IssueRecord.objects.all().order_by('-date')
+    
+    issue_records = IssueRecord.objects.select_related('department').prefetch_related('items').only(
+        'id', 'date', 'department__name', 'issued_by', 'received_by', 'voucher_number'
+    ).order_by('-date')
 
     if form.is_valid():
         if form.cleaned_data['date_from']:
