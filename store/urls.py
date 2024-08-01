@@ -44,6 +44,6 @@ urlpatterns = [
  
     # Other URLS
     path('export_items_to_excel/', views.export_items_to_excel, name='export_items_to_excel'),
-
+    
 ]
 

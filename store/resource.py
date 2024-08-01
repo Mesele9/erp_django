@@ -36,3 +36,5 @@ class ItemResource(resources.ModelResource):
             else:
                 # Handle missing position gracefully
                 row['subcategory'] = None  # or raise ValueError or handle differently
+
+

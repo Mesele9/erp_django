@@ -5,6 +5,7 @@
   <form method="get">
     {{ form.as_p }}
     <button type="submit">Generate Report</button>
+    <button type="submit" name="export" value="excel">Export to Excel</button>
   </form>
 
   <table>
@@ -14,6 +15,7 @@
         <th>Category</th>
         <th>Subcategory</th>
         <th>Total Quantity</th>
+        <th>Total Cost</th>
       </tr>
     </thead>
     <tbody>
@@ -23,6 +25,7 @@
           <td>{{ item.item__category__name }}</td>
           <td>{{ item.item__subcategory__name }}</td>
           <td>{{ item.total_quantity|intcomma }}</td>
+          <td>{{ item.total_price|intcomma }}</td>
         </tr>
       {% endfor %}
     </tbody>

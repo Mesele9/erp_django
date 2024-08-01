@@ -3,10 +3,12 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F, Sum, Q, Avg
 import openpyxl
+from openpyxl.utils import get_column_letter
 from .models import Item, PurchaseRecord, PurchaseRecordItem, IssueRecord, IssueRecordItem, Subcategory, Supplier
 from .forms import IssueRecordFilterForm, ItemForm, ItemFilterForm, ItemsIssuedReportForm, ItemsPurchasedReportForm, PurchaseRecordFilterForm, PurchaseRecordForm, PurchaseRecordItemFormSet, IssueRecordForm, IssueRecordItemFormSet, SummarizedItemsIssuedReportForm, SummarizedItemsPurchasedReportForm, SupplierForm, SupplierFilterForm
 from .resource import ItemResource
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Prefetch
 
 
 @login_required
@@ -165,7 +167,7 @@ def item_delete(request, pk):
 
 def purchase_record_list(request):
     form = PurchaseRecordFilterForm(request.GET or None)
-    purchase_records = PurchaseRecord.objects.select_related('supplier').prefetch_related('items')
+    purchase_records = PurchaseRecord.objects.select_related('supplier').prefetch_related('items').order_by('-date')
 
     if form.is_valid():
         if form.cleaned_data['date_from']:
@@ -190,12 +192,7 @@ def purchase_record_list(request):
 def purchase_record_detail(request, pk):
     purchase_record = get_object_or_404(PurchaseRecord.objects.prefetch_related('items'), pk=pk)
     return render(request, 'store/purchase_record_detail.html', {'purchase_record': purchase_record})
-'''
-def purchase_record_detail(request, pk):
-    purchase_record = get_object_or_404(PurchaseRecord, pk=pk)
-    purchase_record_items = PurchaseRecordItem.objects.filter(purchase_record=purchase_record)
-    return render(request, 'store/purchase_record_detail.html', {'purchase_record': purchase_record, 'purchase_record_items': purchase_record_items})
-'''
+
 
 def purchase_record_create(request):
     if request.method == 'POST':
@@ -237,14 +234,11 @@ def purchase_record_delete(request, pk):
         return redirect('purchase_record_list')
     return render(request, 'store/purchase_record_confirm_delete.html', {'purchase_record': purchase_record})
 
-from django.db.models import Prefetch
 
 def issue_record_list(request):
     form = IssueRecordFilterForm(request.GET or None)
     
-    issue_records = IssueRecord.objects.select_related('department').prefetch_related('items').only(
-        'id', 'date', 'department__name', 'issued_by', 'received_by', 'voucher_number'
-    ).order_by('-date')
+    issue_records = IssueRecord.objects.select_related('department').prefetch_related('items').order_by('-date')
 
     if form.is_valid():
         if form.cleaned_data['date_from']:
@@ -348,6 +342,9 @@ def items_purchased_report(request):
             total_price=Sum('total_price')
         )
 
+        if 'export' in request.GET and request.GET['export'] == 'excel':
+            return export_to_excel(report_data, 'Items Purchased Report')
+
     return render(request, 'store/items_purchased_report.html', {
         'form': form,
         'report_data': report_data,
@@ -373,7 +370,7 @@ def items_issued_report(request):
         if voucher_number:
             filters &= Q(issue_record__voucher_number__icontains=voucher_number)
         if department:
-            filters &= Q(issue_record__department__icontains=department)
+            filters &= Q(issue_record__department=department)
         if description:
             filters &= Q(item__description__icontains=description)
 
@@ -383,10 +380,15 @@ def items_issued_report(request):
             'item__subcategory__name',
             'issue_record__date',
             'issue_record__voucher_number',
-            'issue_record__department',
+            'issue_record__department__name',
         ).annotate(
-            total_quantity=Sum('quantity')
+            total_quantity=Sum('quantity'),
+            total_price=Sum(F('quantity') * F('item__current_unit_price'))
+
         )
+
+        if 'export' in request.GET and request.GET['export'] == 'excel':
+            return export_to_excel(report_data, 'Items Issued Report')
 
     return render(request, 'store/items_issued_report.html', {
         'form': form,
@@ -420,10 +422,40 @@ def summarized_items_purchased_report(request):
             total_price=Sum('total_price')
         )
 
+    if 'export' in request.GET:
+        response = HttpResponse(
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        )
+        response['Content-Disposition'] = 'attachment; filename=summarized_items_purchased_report.xlsx'
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = 'Summarized Items Purchased'
+
+        headers = ['Item Description', 'Category', 'Subcategory', 'Total Quantity', 'Total Price']
+        ws.append(headers)
+
+        for record in report_data:
+            row = [
+                record['item__description'],
+                record['item__category__name'],
+                record['item__subcategory__name'],
+                record['total_quantity'],
+                record['total_price'],
+            ]
+            ws.append(row)
+
+        for col in range(1, len(headers) + 1):
+            ws.column_dimensions[get_column_letter(col)].auto_size = True
+
+        wb.save(response)
+        return response
+
     return render(request, 'store/summarized_items_purchased_report.html', {
         'form': form,
         'report_data': report_data,
     })
+
+from django.db.models import F, FloatField, ExpressionWrapper
 
 def summarized_items_issued_report(request):
     form = SummarizedItemsIssuedReportForm(request.GET or None)
@@ -447,13 +479,64 @@ def summarized_items_issued_report(request):
             'item__category__name',
             'item__subcategory__name'
         ).annotate(
-            total_quantity=Sum('quantity')
+            total_quantity=Sum('quantity'),
+            total_price=Sum(F('quantity') * F('item__current_unit_price'))
         )
+
+    if 'export' in request.GET:
+        response = HttpResponse(
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        )
+        response['Content-Disposition'] = 'attachment; filename=summarized_items_issued_report.xlsx'
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = 'Summarized Items Issued'
+
+        headers = ['Item Description', 'Category', 'Subcategory', 'Total Quantity', 'Total Price']
+        ws.append(headers)
+
+        for record in report_data:
+            row = [
+                record['item__description'],
+                record['item__category__name'],
+                record['item__subcategory__name'],
+                record['total_quantity'],
+                record['total_price'],
+                
+            ]
+            ws.append(row)
+
+        for col in range(1, len(headers) + 1):
+            ws.column_dimensions[get_column_letter(col)].auto_size = True
+
+        wb.save(response)
+        return response
 
     return render(request, 'store/summarized_items_issued_report.html', {
         'form': form,
         'report_data': report_data,
     })
+
+
+def export_to_excel(data, report_name):
+    workbook = openpyxl.Workbook()
+    worksheet = workbook.active
+    worksheet.title = report_name
+
+    headers = list(data[0].keys()) if data else []
+    for col_num, header in enumerate(headers, 1):
+        column_letter = get_column_letter(col_num)
+        worksheet[f'{column_letter}1'] = header
+
+    for row_num, item in enumerate(data, 2):
+        for col_num, (key, value) in enumerate(item.items(), 1):
+            column_letter = get_column_letter(col_num)
+            worksheet[f'{column_letter}{row_num}'] = value
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename={report_name}.xlsx'
+    workbook.save(response)
+    return response
 
 
 def export_items_to_excel(request):
@@ -462,3 +545,5 @@ def export_items_to_excel(request):
     response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename="items.xlsx"'
     return response
+
+
