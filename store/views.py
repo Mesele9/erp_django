@@ -37,6 +37,7 @@ def store_dashboard(request):
     
     return render(request, 'store/dashboard.html', context)
 
+
 def load_subcategories(request):
     category_id = request.GET.get('category_id')
     if category_id:
@@ -69,6 +70,8 @@ def supplier_list(request):
 
     return render(request, 'store/supplier_list.html', {'suppliers': suppliers, 'form': form})
 
+
+@login_required
 def supplier_create(request):
     if request.method == 'POST':
         form = SupplierForm(request.POST)
@@ -79,6 +82,8 @@ def supplier_create(request):
         form = SupplierForm()
     return render(request, 'store/supplier_form.html', {'form': form})
 
+
+@login_required
 def supplier_edit(request, pk):
     supplier = get_object_or_404(Supplier, pk=pk)
     if request.method == 'POST':
@@ -90,6 +95,8 @@ def supplier_edit(request, pk):
         form = SupplierForm(instance=supplier)
     return render(request, 'store/supplier_form.html', {'form': form})
 
+
+@login_required
 def supplier_delete(request, pk):
     supplier = get_object_or_404(Supplier, pk=pk)
     if request.method == 'POST':
@@ -134,6 +141,7 @@ def item_list(request):
     return render(request, 'store/item_list.html', context)
 
 
+@login_required
 def item_create(request):
     if request.method == 'POST':
         form = ItemForm(request.POST)
@@ -145,6 +153,7 @@ def item_create(request):
     return render(request, 'store/item_form.html', {'form': form})
 
 
+@login_required
 def item_edit(request, pk):
     item = get_object_or_404(Item, pk=pk)
     if request.method == 'POST':
@@ -157,6 +166,7 @@ def item_edit(request, pk):
     return render(request, 'store/item_form.html', {'form': form})
 
 
+@login_required
 def item_delete(request, pk):
     item = Item.objects.get(pk=pk)
     if request.method == 'POST':
@@ -165,6 +175,7 @@ def item_delete(request, pk):
     return render(request, 'store/item_confirm_delete.html', {'item': item})
 
 
+@login_required
 def purchase_record_list(request):
     form = PurchaseRecordFilterForm(request.GET or None)
     purchase_records = PurchaseRecord.objects.select_related('supplier').prefetch_related('items').order_by('-date')
@@ -189,11 +200,14 @@ def purchase_record_list(request):
 
     return render(request, 'store/purchase_record_list.html', {'purchase_records': purchase_records, 'form': form})
 
+
+@login_required
 def purchase_record_detail(request, pk):
     purchase_record = get_object_or_404(PurchaseRecord.objects.prefetch_related('items'), pk=pk)
     return render(request, 'store/purchase_record_detail.html', {'purchase_record': purchase_record})
 
 
+@login_required
 def purchase_record_create(request):
     if request.method == 'POST':
         form = PurchaseRecordForm(request.POST, request.FILES)
@@ -212,6 +226,7 @@ def purchase_record_create(request):
     return render(request, 'store/purchase_record_form.html', {'form': form, 'formset': formset})
 
 
+@login_required
 def purchase_record_edit(request, pk):
     purchase_record = get_object_or_404(PurchaseRecord, pk=pk)
     if request.method == 'POST':
@@ -227,6 +242,7 @@ def purchase_record_edit(request, pk):
     return render(request, 'store/purchase_record_form.html', {'form': form, 'formset': formset})
 
 
+@login_required
 def purchase_record_delete(request, pk):
     purchase_record = get_object_or_404(PurchaseRecord, pk=pk)
     if request.method == 'POST':
@@ -235,6 +251,7 @@ def purchase_record_delete(request, pk):
     return render(request, 'store/purchase_record_confirm_delete.html', {'purchase_record': purchase_record})
 
 
+@login_required
 def issue_record_list(request):
     form = IssueRecordFilterForm(request.GET or None)
     
@@ -260,12 +277,14 @@ def issue_record_list(request):
     return render(request, 'store/issue_record_list.html', {'issue_records': issue_records, 'form': form})
 
 
+@login_required
 def issue_record_detail(request, pk):
     issue_record = get_object_or_404(IssueRecord, pk=pk)
     issue_record_items = IssueRecordItem.objects.filter(issue_record=issue_record)
     return render(request, 'store/issue_record_detail.html', {'issue_record': issue_record, 'issue_record_items': issue_record_items})
 
 
+@login_required
 def issue_record_create(request):
     if request.method == 'POST':
         form = IssueRecordForm(request.POST)
@@ -284,6 +303,7 @@ def issue_record_create(request):
     return render(request, 'store/issue_record_form.html', {'form': form, 'formset': formset})
 
 
+@login_required
 def issue_record_edit(request, pk):
     issue_record = get_object_or_404(IssueRecord, pk=pk)
     if request.method == 'POST':
@@ -299,6 +319,7 @@ def issue_record_edit(request, pk):
     return render(request, 'store/issue_record_form.html', {'form': form, 'formset': formset})
 
 
+@login_required
 def issue_record_delete(request, pk):
     issue_record = get_object_or_404(IssueRecord, pk=pk)
     if request.method == 'POST':
@@ -307,6 +328,7 @@ def issue_record_delete(request, pk):
     return render(request, 'store/issue_record_confirm_delete.html', {'issue_record': issue_record})
 
 
+@login_required
 def items_purchased_report(request):
     form = ItemsPurchasedReportForm(request.GET or None)
     report_data = []
@@ -351,6 +373,7 @@ def items_purchased_report(request):
     })
 
 
+@login_required
 def items_issued_report(request):
     form = ItemsIssuedReportForm(request.GET or None)
     report_data = []
@@ -396,6 +419,7 @@ def items_issued_report(request):
     })
 
 
+@login_required
 def summarized_items_purchased_report(request):
     form = SummarizedItemsPurchasedReportForm(request.GET or None)
     report_data = []
@@ -457,6 +481,8 @@ def summarized_items_purchased_report(request):
 
 from django.db.models import F, FloatField, ExpressionWrapper
 
+
+@login_required
 def summarized_items_issued_report(request):
     form = SummarizedItemsIssuedReportForm(request.GET or None)
     report_data = []
