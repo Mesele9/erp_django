@@ -1,0 +1,97 @@
+/* General Styles */
+body {
+    background: linear-gradient(135deg, #f8f9fa, #e0f7fa);
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header with Logo */
+.title-bar {
+    background-color: #a7c957; /* Sage Green */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.title-bar img {
+    height: 100px; /* Adjust size as needed */
+    margin-right: 10px; /* Space between logo and text */
+    width: auto;
+}
+
+.title-bar h1 {
+    margin: 0;
+    font-size: 32px; /* Larger font size */
+    font-weight: bold;
+    color: white; /* White text for contrast */
+}
+
+/* Header with*/
+.title-bar-secondary {
+    background-color: #f28c28; /* Orange */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Main Category Buttons */
+.btn-group .btn {
+    margin: 5px;
+    border-radius: 20px !important;
+    font-size: 14px;
+    padding: 5px 15px;
+}
+
+/* Ensure cards have equal height */
+.card.h-100 {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+/* Menu Item Image Styles */
+.card-img-top {
+    width: 100%; /* Ensure the image takes up the full width of the card */
+    height: 200px; /* Fixed height for consistency */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+    border-top-left-radius: 12px; /* Match card border radius */
+    border-top-right-radius: 12px;
+}
+
+/* Search Bar */
+.search-bar {
+    width: 80%;
+    max-width: 400px;
+    padding: 10px;
+    border: 2px solid #a7c957; /* Sage Green */
+    border-radius: 8px;
+    outline: none;
+    font-size: 16px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+/* Back Button */
+.btn-secondary {
+    background-color: #f28c28; /* Orange */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-secondary:hover {
+    background-color: #c76d1b; /* Darker orange */
+}

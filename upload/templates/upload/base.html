@@ -1,17 +1,21 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Print File Upload System{% endblock %}</title>
+    <title>{% block title %}File Upload System{% endblock %}</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'upload/css/styles.css' %}">
+
 </head>
 <body>
-    <header class="bg-primary text-white text-center py-4">
-        <h1>Print File Upload System</h1>
-    </header>
+     <!-- Title Bar with Logo -->
+     <div class="title-bar">
+        <img src="{% static 'upload/images/logo.png' %}" alt="Company Logo" class="logo">
+    </div>
 
     <main class="container mt-4">
         {% block content %}
