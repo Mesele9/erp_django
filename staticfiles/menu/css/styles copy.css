@@ -1,0 +1,83 @@
+/* General Styles */
+body {
+    background: linear-gradient(135deg, #f8f9fa, #e0f7fa);
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Main Category Tabs */
+.btn-group .btn {
+    margin: 5px;
+    border-radius: 20px !important;
+}
+
+/* Subcategory Cards */
+.category-card {
+    background-color: #a7c957; /* Sage Green */
+    color: white;
+    border-radius: 12px;
+    transition: transform 0.2s;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Menu Items Grid */
+#menu-items-container {
+    margin-top: 20px;
+}
+
+.menu-item .card {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.menu-item .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item .card-img-top {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    height: 200px;
+    object-fit: cover;
+}
+
+.menu-item .card-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.menu-item .card-text {
+    font-size: 14px;
+    color: #666;
+}
+
+.menu-item .card-text.text-primary {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Search Bar */
+.search-bar {
+    width: 80%;
+    max-width: 400px;
+    padding: 10px;
+    border: 2px solid #a7c957; /* Sage Green */
+    border-radius: 8px;
+    outline: none;
+    font-size: 16px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.search-bar:focus {
+    border-color: #6b8e23; /* Darker Sage Green */
+    box-shadow: 0 0 5px rgba(107, 142, 35, 0.5);
+}

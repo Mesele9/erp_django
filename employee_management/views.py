@@ -303,7 +303,7 @@ def document_list(request):
     if search_query:
         documents = documents.filter(name__icontains=search_query)
 
-    paginator = Paginator(documents, 10)  # Show 10 documents per page
+    paginator = Paginator(documents, 20)  # Show 10 documents per page
     page_number = request.GET.get('page')
     try:
         page_obj = paginator.get_page(page_number)

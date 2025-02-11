@@ -55,7 +55,10 @@ INSTALLED_APPS = [
 
     'employee_management',
     'store',
-    'common_user'
+    'common_user',
+    'menu',
+    'upload',
+
 ]
 
 MIDDLEWARE = [

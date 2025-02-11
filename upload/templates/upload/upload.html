@@ -1,0 +1,40 @@
+{% extends 'upload/base.html' %}
+
+{% block title %}Upload Files{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Upload Files</h2>
+        </div>
+        <div class="card-body">
+            {% if success_message %}
+            <div class="alert alert-success">
+                {{ success_message }}
+            </div>
+            {% endif %}
+
+            {% if errors %}
+            <div class="alert alert-danger">
+                <strong>Error(s):</strong>
+                <ul>
+                    {% for error in errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="files" class="form-label">Select files to upload:</label>
+                    <input type="file" name="files" class="form-control" multiple>
+                </div>
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
