@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.contrib.auth.decorators  import login_required
 from django.http import FileResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
@@ -52,8 +52,8 @@ def upload_file(request):
     })
 
 
-@staff_member_required
-def dashboard(request):
+@login_required
+def upload_dashboard(request):
     search_query = request.GET.get('search', '')
     sort_by = request.GET.get('sort', '-uploaded_at')
     page_number = request.GET.get('page', 1)
@@ -75,7 +75,8 @@ def dashboard(request):
         'sort_by': sort_by,
     })
 
-@staff_member_required
+
+@login_required
 def download_file(request, file_id):
     file = get_object_or_404(File, id=file_id)
     file_path = os.path.join(settings.MEDIA_ROOT, file.file.name)
@@ -83,7 +84,33 @@ def download_file(request, file_id):
     response['Content-Disposition'] = f'attachment; filename="{os.path.basename(file_path)}"'
     return response
 
-@staff_member_required
+@login_required
 def view_file(request, file_id):
     file = get_object_or_404(File, id=file_id)
     return render(request, 'upload/view_file.html', {'file': file})
+
+
+@login_required
+def view_file(request, file_id):
+    file = get_object_or_404(File, id=file_id)
+    
+    # Check if file exists physically
+    if not os.path.exists(file.file.path):
+        return HttpResponse("File not found", status=404)
+        
+    return render(request, 'upload/view_file.html', {'file': file})
+
+
+@login_required
+def delete_file(request, file_id):
+    file = get_object_or_404(File, id=file_id)
+    
+    if request.method == 'POST':
+        # Delete physical file
+        if os.path.exists(file.file.path):
+            os.remove(file.file.path)
+        # Delete database record
+        file.delete()
+        return redirect('upload_dashboard')
+    
+    return render(request, 'upload/confirm_delete.html', {'file': file})

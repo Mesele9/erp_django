@@ -12,9 +12,6 @@
                 <a href="{% url 'upload_file' %}" class="btn btn-light btn-sm">
                     <i class="bi bi-upload"></i> Upload New
                 </a>
-                <a href="{% url 'admin:logout' %}" class="btn btn-light btn-sm">
-                    <i class="bi bi-box-arrow-right"></i> Logout
-                </a>
             </div>
         </div>
         
@@ -62,12 +59,17 @@
                             <td>
                                 <a href="{% url 'download_file' file.id %}" 
                                    class="btn btn-success btn-sm">
-                                    <i class="bi bi-download"></i> Download
+                                    <i class="bi bi-download"></i>
                                 </a>
                                 <a href="{% url 'view_file' file.id %}" 
                                    class="btn btn-info btn-sm">
-                                    <i class="bi bi-eye"></i> View
+                                    <i class="bi bi-eye"></i>
                                 </a>
+                            </a>
+                                <a href="{% url 'delete_file' file.id %}" \
+                                   class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash"></i>
+                            </a>
                             </td>
                         </tr>
                         {% empty %}

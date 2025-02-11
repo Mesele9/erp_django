@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from common_user.views import login_view, admin_dashboard, logout_view, database_backup, database_restore
 from employee_management.views import hr_dashboard
+from upload.views import upload_dashboard
 from store.views import store_dashboard
 
 from django.conf import settings
@@ -34,6 +35,7 @@ urlpatterns = [
 
     path('hr_dashboard/', hr_dashboard, name='hr_dashboard'),
     path('store_dashboard/', store_dashboard, name='store_dashboard'),
+    path('upload_dashboard', upload_dashboard, name='upload_dashboard'),
 
     path('database_backup/', database_backup, name='database_backup'),
     path('database_restore/', database_restore, name='database_restore'),

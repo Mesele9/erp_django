@@ -12,6 +12,8 @@ class RoleBasedRedirectionMiddleware:
                 return redirect('hr_dashboard')
             elif request.user.role =='store_staff':
                 return redirect('store_dashboard')
+            elif request.user.role == 'reception':
+                return redirect('upload_dashboard')
             elif request.user.is_superuser or request.user.role == 'admin':
                 return redirect('admin_dashboard')
         return response
