@@ -79,7 +79,7 @@
 
         {% for item in menu_items %}
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <a href="{% url 'menu_item_detail' item.id %}" class="text-decoration-none text-dark">
+            <a href="{% url 'menu_item_detail' item.id %}?category={{ selected_subcategory }}" class="text-decoration-none text-dark">
                 <div class="card h-100">
                     {% if item.image %}
                     <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}">
@@ -87,7 +87,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ item.name }}</h5>
                         <p class="card-text">{{ item.description|truncatechars:100 }}</p>
-                        <p class="card-text text-primary">${{ item.price }}</p>
+                        <p class="card-text text-primary">Br{{ item.price }}</p>
                     </div>
                 </div>
             </a>

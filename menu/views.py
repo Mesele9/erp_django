@@ -68,23 +68,24 @@ def menu_view(request):
 
 def menu_item_detail(request, item_id):
     item = get_object_or_404(MenuItem, id=item_id)
-    ratings = Rating.objects.filter(menu_item=item)
+    ratings = Rating.objects.filter(menu_item=item).order_by('-created_at')
+    category_id = request.GET.get('category')
+
     
     if request.method == 'POST':
         form = RatingForm(request.POST)
         if form.is_valid():
-            Rating.objects.create(
-                menu_item=item,
-                stars=form.cleaned_data['stars'],
-                comment=form.cleaned_data['comment'],
-                guest_name=form.cleaned_data['guest_name']
-            )
+            rating = form.save(commit=False)
+            rating.menu_item = item
+            rating.save()
+            return redirect('menu_item_detail', item_id=item_id)
     else:
         form = RatingForm()
 
     context = {
         'item': item,
         'ratings': ratings,
+        'category_id': category_id,
         'form': form
     }
     return render(request, 'menu/detail.html', context)
@@ -108,7 +109,33 @@ def menu_dashboard(request):
 
 def menu_item_list(request):
     menu_items = MenuItem.objects.select_related().prefetch_related('categories', 'tags').all()
-    context = {'menu_items': menu_items}
+    selected_category = None
+    search_query = ''
+
+    # Category filter
+    category_filter = request.GET.get('category')
+    if category_filter:
+        try:
+            selected_category = Category.objects.get(id=category_filter)
+            menu_items = menu_items.filter(categories__id=category_filter)
+        except (Category.DoesNotExist, ValueError):
+            pass
+
+    # Search functionality
+    search_query = request.GET.get('q', '')
+    if search_query.strip():
+        menu_items = menu_items.filter(
+            Q(name__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+    categories = Category.objects.all()
+    
+    context = {
+        'menu_items': menu_items.distinct(),
+        'categories': categories,
+        'selected_category': selected_category,
+        'search_query': search_query
+    }
     return render(request, 'menu/dashboard/menuitem_list.html', context)
 
 

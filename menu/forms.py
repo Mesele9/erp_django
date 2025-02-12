@@ -66,10 +66,25 @@ class MenuItemForm(forms.ModelForm):
 class RatingForm(forms.ModelForm):
     class Meta:
         model = Rating
-        fields = ['menu_item', 'stars', 'comment', 'guest_name']
+        fields = ['guest_name', 'stars', 'comment']
         widgets = {
-            'menu_item': forms.Select(attrs={'class': 'form-select'}),
-            'stars': forms.Select(attrs={'class': 'form-select'}),
-            'comment': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'guest_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'guest_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Your name (optional)'
+            }),
+            'stars': forms.RadioSelect(attrs={'class': 'star-rating'}),
+            'comment': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Share your experience... (optional)'
+            }),
         }
+        labels = {
+            'stars': 'Your Rating'
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['stars'].widget.choices = [
+            (i, f'{i} Star{"s" if i > 1 else ""}') for i in range(1, 6)
+        ]

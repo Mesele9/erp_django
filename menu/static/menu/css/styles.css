@@ -142,3 +142,42 @@ body {
 .btn-secondary:hover {
     background-color: #c76d1b; /* Darker orange */
 }
+
+.star-rating-container {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.star-label {
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    background-color: #f8f9fa;
+    transition: all 0.2s;
+}
+
+.star-label:hover {
+    background-color: #e9ecef;
+}
+
+.star-label .stars {
+    font-size: 1.5rem;
+    color: #ffd700;
+}
+
+.form-check-input:checked + .star-label {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.form-check-input:checked + .star-label .stars {
+    color: #ffd700;
+}
+
+.form-check-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}

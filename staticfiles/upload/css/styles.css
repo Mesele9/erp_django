@@ -31,6 +31,16 @@ body {
     color: white; /* White text for contrast */
 }
 
+/* Header with*/
+.title-bar-secondary {
+    background-color: #f28c28; /* Orange */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
 /* Main Category Buttons */
 .btn-group .btn {
