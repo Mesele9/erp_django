@@ -1,11 +1,9 @@
-from django.shortcuts import render, get_object_or_404
-from .models import MainCategory, Category, MenuItem, Rating
-from .forms import RatingForm
-import qrcode
-from django.http import HttpResponse
-from django.conf import settings
-import os
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import MainCategory, Category, MenuItem, Tag, Rating
 from django.db.models import Q
+from django.urls import reverse
+from django.contrib import messages
+from .forms import MainCategoryForm, CategoryForm, TagForm, MenuItemForm, RatingForm
 
 
 def menu_view(request):
@@ -90,3 +88,192 @@ def menu_item_detail(request, item_id):
         'form': form
     }
     return render(request, 'menu/detail.html', context)
+
+
+
+def menu_dashboard(request):
+    recent_ratings = Rating.objects.select_related('menu_item').order_by('-created_at')[:5]
+    menu_items_count = MenuItem.objects.count()
+    categories_count = Category.objects.count()
+    tags_count = Tag.objects.count()
+    
+    context = {
+        'recent_ratings': recent_ratings,
+        'menu_items_count': menu_items_count,
+        'categories_count': categories_count,
+        'tags_count': tags_count,
+    }
+    return render(request, 'menu/dashboard/menu_dashboard.html', context)
+
+
+def menu_item_list(request):
+    menu_items = MenuItem.objects.select_related().prefetch_related('categories', 'tags').all()
+    context = {'menu_items': menu_items}
+    return render(request, 'menu/dashboard/menuitem_list.html', context)
+
+
+def menu_item_create(request):
+    if request.method == 'POST':
+        form = MenuItemForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Menu item created successfully!')
+            return redirect('menu_item_list')
+    else:
+        form = MenuItemForm()
+    
+    context = {'form': form}
+    return render(request, 'menu/dashboard/menuitem_form.html', context)
+
+
+def menu_item_update(request, pk):
+    item = get_object_or_404(MenuItem, pk=pk)
+    if request.method == 'POST':
+        form = MenuItemForm(request.POST, request.FILES, instance=item)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Menu item updated successfully!')
+            return redirect('menu_item_list')
+    else:
+        form = MenuItemForm(instance=item)
+    
+    context = {'form': form, 'item': item}
+    return render(request, 'menu/dashboard/menuitem_form.html', context)
+
+
+def menu_item_delete(request, pk):
+    item = get_object_or_404(MenuItem, pk=pk)
+    if request.method == 'POST':
+        item.delete()
+        messages.success(request, 'Menu item deleted successfully!')
+        return redirect('menu_item_list')
+    
+    context = {'item': item}
+    return render(request, 'menu/dashboard/menuitem_confirm_delete.html', context)
+
+
+def main_category_list(request):
+    main_categories = MainCategory.objects.all()
+    context = {'main_categories': main_categories}
+    return render(request, 'menu/dashboard/maincategory_list.html', context)
+
+def main_category_create(request):
+    if request.method == 'POST':
+        form = MainCategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Main category created successfully!')
+            return redirect('main_category_list')
+    else:
+        form = MainCategoryForm()
+    
+    context = {'form': form}
+    return render(request, 'menu/dashboard/maincategory_form.html', context)
+
+def main_category_update(request, pk):
+    main_category = get_object_or_404(MainCategory, pk=pk)
+    if request.method == 'POST':
+        form = MainCategoryForm(request.POST, instance=main_category)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Main category updated successfully!')
+            return redirect('main_category_list')
+    else:
+        form = MainCategoryForm(instance=main_category)
+    
+    context = {'form': form, 'main_category': main_category}
+    return render(request, 'menu/dashboard/maincategory_form.html', context)
+
+def main_category_delete(request, pk):
+    main_category = get_object_or_404(MainCategory, pk=pk)
+    if request.method == 'POST':
+        main_category.delete()
+        messages.success(request, 'Main category deleted successfully!')
+        return redirect('main_category_list')
+    
+    context = {'main_category': main_category}
+    return render(request, 'menu/dashboard/maincategory_confirm_delete.html', context)
+
+def category_list(request):
+    categories = Category.objects.select_related('main_category').all()
+    context = {'categories': categories}
+    return render(request, 'menu/dashboard/category_list.html', context)
+
+def category_create(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Category created successfully!')
+            return redirect('category_list')
+    else:
+        form = CategoryForm()
+    
+    context = {'form': form}
+    return render(request, 'menu/dashboard/category_form.html', context)
+
+def category_update(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Category updated successfully!')
+            return redirect('category_list')
+    else:
+        form = CategoryForm(instance=category)
+    
+    context = {'form': form, 'category': category}
+    return render(request, 'menu/dashboard/category_form.html', context)
+
+def category_delete(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    if request.method == 'POST':
+        category.delete()
+        messages.success(request, 'Category deleted successfully!')
+        return redirect('category_list')
+    
+    context = {'category': category}
+    return render(request, 'menu/dashboard/category_confirm_delete.html', context)
+
+def tag_list(request):
+    tags = Tag.objects.all()
+    context = {'tags': tags}
+    return render(request, 'menu/dashboard/tag_list.html', context)
+
+def tag_create(request):
+    if request.method == 'POST':
+        form = TagForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Tag created successfully!')
+            return redirect('tag_list')
+    else:
+        form = TagForm()
+    
+    context = {'form': form}
+    return render(request, 'menu/dashboard/tag_form.html', context)
+
+def tag_update(request, pk):
+    tag = get_object_or_404(Tag, pk=pk)
+    if request.method == 'POST':
+        form = TagForm(request.POST, instance=tag)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Tag updated successfully!')
+            return redirect('tag_list')
+    else:
+        form = TagForm(instance=tag)
+    
+    context = {'form': form, 'tag': tag}
+    return render(request, 'menu/dashboard/tag_form.html', context)
+
+def tag_delete(request, pk):
+    tag = get_object_or_404(Tag, pk=pk)
+    if request.method == 'POST':
+        tag.delete()
+        messages.success(request, 'Tag deleted successfully!')
+        return redirect('tag_list')
+    
+    context = {'tag': tag}
+    return render(request, 'menu/dashboard/tag_confirm_delete.html', context)
