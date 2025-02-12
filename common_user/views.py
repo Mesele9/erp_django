@@ -15,6 +15,8 @@ from django.http import HttpResponse
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 
+import qrcode
+from django.conf import settings
 
 
 def login_view(request):
@@ -85,3 +87,40 @@ def database_restore(request):
                 messages.error(request, f'Error during restore: {str(e)}')
 
     return render(request, 'common_user/restore.html')
+
+
+from io import BytesIO
+import base64
+
+def generate_qr_code(url, color='black'):
+    """Helper function to generate QR code"""
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+    
+    img = qr.make_image(fill_color=color, back_color="white")
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    return base64.b64encode(buffer.getvalue()).decode()
+
+def qr_code_page(request):
+    # Generate URLs
+    menu_url = request.build_absolute_uri('/menu')
+    upload_url = request.build_absolute_uri('/upload')
+    
+    # Generate QR codes
+    menu_qr = generate_qr_code(menu_url, color='#2c3e50')
+    upload_qr = generate_qr_code(upload_url, color='#27ae60')
+    
+    context = {
+        'menu_url': menu_url,
+        'upload_url': upload_url,
+        'menu_qr': menu_qr,
+        'upload_qr': upload_qr,
+    }
+    return render(request, 'common_user/qr_code_page.html', context)
