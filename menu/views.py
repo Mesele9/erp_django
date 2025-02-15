@@ -1,11 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from .models import MainCategory, Category, MenuItem, Tag, Rating
 from django.db.models import Q
 from django.urls import reverse
 from django.contrib import messages
 from .forms import MainCategoryForm, CategoryForm, TagForm, MenuItemForm, RatingForm
+from common_user.decorators import public_view, role_required
 
 
+@public_view
 def menu_view(request):
     main_categories = MainCategory.objects.all()
     
@@ -66,6 +69,7 @@ def menu_view(request):
     return render(request, 'menu/menu.html', context)
 
 
+@public_view
 def menu_item_detail(request, item_id):
     item = get_object_or_404(MenuItem, id=item_id)
     ratings = Rating.objects.filter(menu_item=item).order_by('-created_at')
@@ -91,7 +95,8 @@ def menu_item_detail(request, item_id):
     return render(request, 'menu/detail.html', context)
 
 
-
+@role_required('fb')
+@login_required
 def menu_dashboard(request):
     recent_ratings = Rating.objects.select_related('menu_item').order_by('-created_at')[:5]
     menu_items_count = MenuItem.objects.count()
@@ -107,6 +112,8 @@ def menu_dashboard(request):
     return render(request, 'menu/dashboard/menu_dashboard.html', context)
 
 
+@role_required('fb')
+@login_required
 def menu_item_list(request):
     menu_items = MenuItem.objects.select_related().prefetch_related('categories', 'tags').all()
     selected_category = None
@@ -139,6 +146,8 @@ def menu_item_list(request):
     return render(request, 'menu/dashboard/menuitem_list.html', context)
 
 
+@role_required('fb')
+@login_required
 def menu_item_create(request):
     if request.method == 'POST':
         form = MenuItemForm(request.POST, request.FILES)
@@ -153,6 +162,8 @@ def menu_item_create(request):
     return render(request, 'menu/dashboard/menuitem_form.html', context)
 
 
+@role_required('fb')
+@login_required
 def menu_item_update(request, pk):
     item = get_object_or_404(MenuItem, pk=pk)
     if request.method == 'POST':
@@ -168,6 +179,8 @@ def menu_item_update(request, pk):
     return render(request, 'menu/dashboard/menuitem_form.html', context)
 
 
+@role_required('fb')
+@login_required
 def menu_item_delete(request, pk):
     item = get_object_or_404(MenuItem, pk=pk)
     if request.method == 'POST':
@@ -179,11 +192,16 @@ def menu_item_delete(request, pk):
     return render(request, 'menu/dashboard/menuitem_confirm_delete.html', context)
 
 
+@role_required('fb')
+@login_required
 def main_category_list(request):
     main_categories = MainCategory.objects.all()
     context = {'main_categories': main_categories}
     return render(request, 'menu/dashboard/maincategory_list.html', context)
 
+
+@role_required('fb')
+@login_required
 def main_category_create(request):
     if request.method == 'POST':
         form = MainCategoryForm(request.POST)
@@ -197,6 +215,9 @@ def main_category_create(request):
     context = {'form': form}
     return render(request, 'menu/dashboard/maincategory_form.html', context)
 
+
+@role_required('fb')
+@login_required
 def main_category_update(request, pk):
     main_category = get_object_or_404(MainCategory, pk=pk)
     if request.method == 'POST':
@@ -211,6 +232,9 @@ def main_category_update(request, pk):
     context = {'form': form, 'main_category': main_category}
     return render(request, 'menu/dashboard/maincategory_form.html', context)
 
+
+@role_required('fb')
+@login_required
 def main_category_delete(request, pk):
     main_category = get_object_or_404(MainCategory, pk=pk)
     if request.method == 'POST':
@@ -221,11 +245,17 @@ def main_category_delete(request, pk):
     context = {'main_category': main_category}
     return render(request, 'menu/dashboard/maincategory_confirm_delete.html', context)
 
+
+@role_required('fb')
+@login_required
 def category_list(request):
     categories = Category.objects.select_related('main_category').all()
     context = {'categories': categories}
     return render(request, 'menu/dashboard/category_list.html', context)
 
+
+@role_required('fb')
+@login_required
 def category_create(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
@@ -239,6 +269,9 @@ def category_create(request):
     context = {'form': form}
     return render(request, 'menu/dashboard/category_form.html', context)
 
+
+@role_required('fb')
+@login_required
 def category_update(request, pk):
     category = get_object_or_404(Category, pk=pk)
     if request.method == 'POST':
@@ -253,6 +286,9 @@ def category_update(request, pk):
     context = {'form': form, 'category': category}
     return render(request, 'menu/dashboard/category_form.html', context)
 
+
+@role_required('fb')
+@login_required
 def category_delete(request, pk):
     category = get_object_or_404(Category, pk=pk)
     if request.method == 'POST':
@@ -263,11 +299,17 @@ def category_delete(request, pk):
     context = {'category': category}
     return render(request, 'menu/dashboard/category_confirm_delete.html', context)
 
+
+@role_required('fb')
+@login_required
 def tag_list(request):
     tags = Tag.objects.all()
     context = {'tags': tags}
     return render(request, 'menu/dashboard/tag_list.html', context)
 
+
+@role_required('fb')
+@login_required
 def tag_create(request):
     if request.method == 'POST':
         form = TagForm(request.POST)
@@ -281,6 +323,9 @@ def tag_create(request):
     context = {'form': form}
     return render(request, 'menu/dashboard/tag_form.html', context)
 
+
+@role_required('fb')
+@login_required
 def tag_update(request, pk):
     tag = get_object_or_404(Tag, pk=pk)
     if request.method == 'POST':
@@ -295,6 +340,9 @@ def tag_update(request, pk):
     context = {'form': form, 'tag': tag}
     return render(request, 'menu/dashboard/tag_form.html', context)
 
+
+@role_required('fb')
+@login_required
 def tag_delete(request, pk):
     tag = get_object_or_404(Tag, pk=pk)
     if request.method == 'POST':

@@ -39,9 +39,17 @@
                             Tags
                         </a>
                     </li>
+                            <!-- Include login/logout links in your navigation -->
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        {% endif %}
+                        </li>
+                
                 </ul>
             </div>
         </nav>
+
 
         <!-- Main Content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">

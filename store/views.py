@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F, Sum, Q, Avg
@@ -9,8 +9,10 @@ from .forms import IssueRecordFilterForm, ItemForm, ItemFilterForm, ItemsIssuedR
 from .resource import ItemResource
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Prefetch
+from common_user.decorators import role_required
 
 
+@role_required('store_staff')
 @login_required
 def search_items(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -21,6 +23,7 @@ def search_items(request):
     return JsonResponse({'results': []}, safe=False)
 
 
+@role_required('store_staff')
 @login_required
 def store_dashboard(request):
     #items = Item.objects.all()
@@ -47,6 +50,7 @@ def load_subcategories(request):
     return JsonResponse(list(subcategories.values('id', 'name')), safe=False)
 
 
+@role_required('store_staff')
 @login_required
 def supplier_list(request):
     form = SupplierFilterForm(request.GET or None)
@@ -71,6 +75,7 @@ def supplier_list(request):
     return render(request, 'store/supplier_list.html', {'suppliers': suppliers, 'form': form})
 
 
+@role_required('store_staff')
 @login_required
 def supplier_create(request):
     if request.method == 'POST':
@@ -83,6 +88,7 @@ def supplier_create(request):
     return render(request, 'store/supplier_form.html', {'form': form})
 
 
+@role_required('store_staff')
 @login_required
 def supplier_edit(request, pk):
     supplier = get_object_or_404(Supplier, pk=pk)
@@ -96,6 +102,7 @@ def supplier_edit(request, pk):
     return render(request, 'store/supplier_form.html', {'form': form})
 
 
+@role_required('store_staff')
 @login_required
 def supplier_delete(request, pk):
     supplier = get_object_or_404(Supplier, pk=pk)
@@ -105,6 +112,7 @@ def supplier_delete(request, pk):
     return render(request, 'store/supplier_confirm_delete.html', {'supplier': supplier})
 
 
+@role_required('store_staff')
 @login_required
 def item_list(request):
     form = ItemFilterForm(request.GET or None)
@@ -141,6 +149,7 @@ def item_list(request):
     return render(request, 'store/item_list.html', context)
 
 
+@role_required('store_staff')
 @login_required
 def item_create(request):
     if request.method == 'POST':
@@ -153,6 +162,7 @@ def item_create(request):
     return render(request, 'store/item_form.html', {'form': form})
 
 
+@role_required('store_staff')
 @login_required
 def item_edit(request, pk):
     item = get_object_or_404(Item, pk=pk)
@@ -166,6 +176,7 @@ def item_edit(request, pk):
     return render(request, 'store/item_form.html', {'form': form})
 
 
+@role_required('store_staff')
 @login_required
 def item_delete(request, pk):
     item = Item.objects.get(pk=pk)
@@ -175,6 +186,7 @@ def item_delete(request, pk):
     return render(request, 'store/item_confirm_delete.html', {'item': item})
 
 
+@role_required('store_staff')
 @login_required
 def purchase_record_list(request):
     form = PurchaseRecordFilterForm(request.GET or None)
@@ -201,12 +213,14 @@ def purchase_record_list(request):
     return render(request, 'store/purchase_record_list.html', {'purchase_records': purchase_records, 'form': form})
 
 
+@role_required('store_staff')
 @login_required
 def purchase_record_detail(request, pk):
     purchase_record = get_object_or_404(PurchaseRecord.objects.prefetch_related('items'), pk=pk)
     return render(request, 'store/purchase_record_detail.html', {'purchase_record': purchase_record})
 
 
+@role_required('store_staff')
 @login_required
 def purchase_record_create(request):
     if request.method == 'POST':
@@ -226,6 +240,7 @@ def purchase_record_create(request):
     return render(request, 'store/purchase_record_form.html', {'form': form, 'formset': formset})
 
 
+@role_required('store_staff')
 @login_required
 def purchase_record_edit(request, pk):
     purchase_record = get_object_or_404(PurchaseRecord, pk=pk)
@@ -242,6 +257,7 @@ def purchase_record_edit(request, pk):
     return render(request, 'store/purchase_record_form.html', {'form': form, 'formset': formset})
 
 
+@role_required('store_staff')
 @login_required
 def purchase_record_delete(request, pk):
     purchase_record = get_object_or_404(PurchaseRecord, pk=pk)
@@ -251,6 +267,7 @@ def purchase_record_delete(request, pk):
     return render(request, 'store/purchase_record_confirm_delete.html', {'purchase_record': purchase_record})
 
 
+@role_required('store_staff')
 @login_required
 def issue_record_list(request):
     form = IssueRecordFilterForm(request.GET or None)
@@ -277,6 +294,7 @@ def issue_record_list(request):
     return render(request, 'store/issue_record_list.html', {'issue_records': issue_records, 'form': form})
 
 
+@role_required('store_staff')
 @login_required
 def issue_record_detail(request, pk):
     issue_record = get_object_or_404(IssueRecord, pk=pk)
@@ -284,6 +302,7 @@ def issue_record_detail(request, pk):
     return render(request, 'store/issue_record_detail.html', {'issue_record': issue_record, 'issue_record_items': issue_record_items})
 
 
+@role_required('store_staff')
 @login_required
 def issue_record_create(request):
     if request.method == 'POST':
@@ -303,6 +322,7 @@ def issue_record_create(request):
     return render(request, 'store/issue_record_form.html', {'form': form, 'formset': formset})
 
 
+@role_required('store_staff')
 @login_required
 def issue_record_edit(request, pk):
     issue_record = get_object_or_404(IssueRecord, pk=pk)
@@ -319,6 +339,7 @@ def issue_record_edit(request, pk):
     return render(request, 'store/issue_record_form.html', {'form': form, 'formset': formset})
 
 
+@role_required('store_staff')
 @login_required
 def issue_record_delete(request, pk):
     issue_record = get_object_or_404(IssueRecord, pk=pk)
@@ -328,6 +349,7 @@ def issue_record_delete(request, pk):
     return render(request, 'store/issue_record_confirm_delete.html', {'issue_record': issue_record})
 
 
+@role_required('store_staff')
 @login_required
 def items_purchased_report(request):
     form = ItemsPurchasedReportForm(request.GET or None)
@@ -373,6 +395,7 @@ def items_purchased_report(request):
     })
 
 
+@role_required('store_staff')
 @login_required
 def items_issued_report(request):
     form = ItemsIssuedReportForm(request.GET or None)
@@ -419,6 +442,7 @@ def items_issued_report(request):
     })
 
 
+@role_required('store_staff')
 @login_required
 def summarized_items_purchased_report(request):
     form = SummarizedItemsPurchasedReportForm(request.GET or None)
@@ -482,6 +506,7 @@ def summarized_items_purchased_report(request):
 from django.db.models import F, FloatField, ExpressionWrapper
 
 
+@role_required('store_staff')
 @login_required
 def summarized_items_issued_report(request):
     form = SummarizedItemsIssuedReportForm(request.GET or None)
@@ -544,6 +569,8 @@ def summarized_items_issued_report(request):
     })
 
 
+@role_required('store_staff')
+@login_required
 def export_to_excel(data, report_name):
     workbook = openpyxl.Workbook()
     worksheet = workbook.active
@@ -565,11 +592,11 @@ def export_to_excel(data, report_name):
     return response
 
 
+@role_required('store_staff')
+@login_required
 def export_items_to_excel(request):
     item_resource = ItemResource()
     dataset = item_resource.export()
     response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename="items.xlsx"'
     return response
-
-

@@ -10,8 +10,10 @@ from datetime import datetime
 from .models import Employee, Department, Position, Document
 from .forms import EmployeeForm, DepartmentForm, PositionForm, DocumentForm
 from .utils import is_upcoming_birthday, calculate_service_duration
+from common_user.decorators import role_required
 
 
+@role_required('hr_staff')
 @login_required
 def hr_dashboard(request):
     # Total number of employees
@@ -54,6 +56,7 @@ def hr_dashboard(request):
     return render(request, 'dashboard.html', context)
 
 
+@role_required('hr_staff')
 @login_required
 def employee_list(request):
     all_employees = Employee.objects.all().order_by('id')
@@ -117,6 +120,7 @@ def employee_list(request):
     return render(request, 'employee_list.html', context)
 
 
+@role_required('hr_staff')
 @login_required
 def employee_form_view(request, pk=None):
     if pk:
@@ -149,33 +153,7 @@ def employee_form_view(request, pk=None):
     return render(request, 'employee_form.html', context)
 
 
-"""@login_required
-def employee_create(request):
-    if request.method == 'POST':
-        form = EmployeeForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Employee Added successfully.')
-            return redirect('employee_list')
-    else:
-        form = EmployeeForm()
-    return render(request, 'employee_form.html', {'form': form})
-
-
-@login_required
-def employee_update(request, pk):
-    employee = get_object_or_404(Employee, pk=pk)
-    if request.method == 'POST':
-        form = EmployeeForm(request.POST, request.FILES, instance=employee)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Employee updated successfully.')
-            return redirect('employee_list')
-    else:
-        form = EmployeeForm(instance=employee)
-    return render(request, 'employee_form.html', {'form': form, 'employee':employee})
-"""
-
+@role_required('hr_staff')
 @login_required
 def employee_delete(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
@@ -184,6 +162,7 @@ def employee_delete(request, pk):
     return redirect('employee_list')
 
 
+@role_required('hr_staff')
 @login_required
 def employee_detail(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
@@ -194,6 +173,7 @@ def employee_detail(request, pk):
     return render(request, 'employee_detail.html', context)    
 
 
+@role_required('hr_staff')
 @login_required
 def department_list(request):
     departments = Department.objects.all().order_by('name')
@@ -209,6 +189,7 @@ def department_list(request):
     return render(request, 'department_list.html', {'page_obj': page_obj})
 
 
+@role_required('hr_staff')
 @login_required
 def department_create(request):
     if request.method == 'POST':
@@ -222,6 +203,7 @@ def department_create(request):
     return render(request, 'department_form.html', {'form': form})
 
 
+@role_required('hr_staff')
 @login_required
 def department_update(request, pk):
     department = get_object_or_404(Department, pk=pk)
@@ -236,6 +218,7 @@ def department_update(request, pk):
     return render(request, 'department_form.html', {'form': form})
 
 
+@role_required('hr_staff')
 @login_required
 def department_delete(request, pk):
     department = get_object_or_404(Department, pk=pk)
@@ -244,6 +227,7 @@ def department_delete(request, pk):
     return redirect('department_list')
 
 
+@role_required('hr_staff')
 @login_required
 def position_list(request):
     positions = Position.objects.all().order_by('name')
@@ -259,6 +243,7 @@ def position_list(request):
     return render(request, 'position_list.html', {'page_obj': page_obj})
 
 
+@role_required('hr_staff')
 @login_required
 def position_create(request):
     if request.method == 'POST':
@@ -272,6 +257,7 @@ def position_create(request):
     return render(request, 'position_form.html', {'form': form})
 
 
+@role_required('hr_staff')
 @login_required
 def position_update(request, pk):
     position = get_object_or_404(Position, pk=pk)
@@ -286,6 +272,7 @@ def position_update(request, pk):
     return render(request, 'position_form.html', {'form': form})
 
 
+@role_required('hr_staff')
 @login_required
 def position_delete(request, pk):
     position = get_object_or_404(Position, pk=pk)
@@ -294,6 +281,7 @@ def position_delete(request, pk):
     return redirect('position_list')
 
 
+@role_required('hr_staff')
 @login_required
 def document_list(request):
     documents = Document.objects.all().order_by('date_uploaded')
@@ -315,6 +303,7 @@ def document_list(request):
     return render(request, 'document_list.html', {'page_obj': page_obj, 'employee': employee})
 
 
+@role_required('hr_staff')
 @login_required
 def document_create(request, employee_id=None):
     if employee_id:
@@ -326,6 +315,7 @@ def document_create(request, employee_id=None):
         return document_upload_form(request, include_employee_field=True)
 
 
+@role_required('hr_staff')
 @login_required
 def document_update(request, pk):
     document = get_object_or_404(Document, pk=pk)
@@ -340,6 +330,7 @@ def document_update(request, pk):
     return render(request, 'document_upload_form.html', {'form': form})
 
 
+@role_required('hr_staff')
 @login_required
 def document_delete(request, pk):
     document = get_object_or_404(Document, pk=pk)
@@ -348,6 +339,7 @@ def document_delete(request, pk):
     return redirect('document_list')
 
 
+@role_required('hr_staff')
 @login_required
 def document_upload_form(request, include_employee_field=True, employee=None):
     if request.method == 'POST':
@@ -374,6 +366,7 @@ def document_upload_form(request, include_employee_field=True, employee=None):
     return render(request, 'document_upload_form.html', context)
 
 
+@role_required('hr_staff')
 @login_required
 def document_view(request, pk):
     document = get_object_or_404(Document, pk=pk)
@@ -394,5 +387,3 @@ def document_view(request, pk):
             return response
     except IOError:
         raise Http404("File Not Found")
-    
-    

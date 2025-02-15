@@ -14,28 +14,35 @@ from .forms import DatabaseBackupForm
 from django.http import HttpResponse
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
+from .decorators import role_required, public_view
 
 import qrcode
+from io import BytesIO
+import base64
 from django.conf import settings
 
 
+@public_view
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
+        
         if user is not None:
             login(request, user)
-            print(user.role)
-            if user.groups.filter(name='hr_staff'):
-                return redirect('employee_management:hr_dashboard')
-            elif user.groups.filter(name='store_staff').exists():
-                return redirect('store:store_dashboard')
-            elif user.is_superuser:
-                return redirect('admin_dashboard')
-        else:
-            messages.info(request, 'Invalid username or password.')
-            return render(request, 'common_user/login.html')
+            role_redirect = {
+                'hr_staff': 'hr_dashboard',
+                'store_staff': 'store_dashboard',
+                'reception': 'upload_dashboard',
+                'admin': 'admin_dashboard',
+                'fb': 'menu_dashboard'
+            }
+            return redirect(role_redirect.get(user.role, 'login'))
+            
+        messages.error(request, 'Invalid credentials')
+        return redirect('login')
+        
     return render(request, 'common_user/login.html')
 
 
@@ -43,6 +50,8 @@ def logout_view(request):
     logout(request)
     return redirect(reverse('login'))
 
+
+@role_required('admin')
 @login_required
 def admin_dashboard(request):
     if request.user.role != 'admin':
@@ -54,7 +63,8 @@ def is_admin(user):
     return user.is_superuser
 
 
-@user_passes_test(is_admin)
+@role_required('admin')
+@login_required
 def database_backup(request):
     if request.method == 'POST':
         form = DatabaseBackupForm(request.POST)
@@ -74,7 +84,9 @@ def database_backup(request):
 
     return render(request, 'common_user/backup.html', {'form': form})
 
-@user_passes_test(is_admin)
+
+@role_required('admin')
+@login_required
 def database_restore(request):
     if request.method == 'POST':
         backup_file = request.FILES.get('backup_file')
@@ -88,9 +100,6 @@ def database_restore(request):
 
     return render(request, 'common_user/restore.html')
 
-
-from io import BytesIO
-import base64
 
 def generate_qr_code(url, color='black'):
     """Helper function to generate QR code"""
@@ -108,6 +117,7 @@ def generate_qr_code(url, color='black'):
     img.save(buffer, format="PNG")
     return base64.b64encode(buffer.getvalue()).decode()
 
+@public_view
 def qr_code_page(request):
     # Generate URLs
     menu_url = request.build_absolute_uri('/menu')

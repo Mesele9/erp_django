@@ -82,7 +82,7 @@
             {% for item in menu_items %}
             <tr>
                 <td>{{ item.name }}</td>
-                <td>${{ item.price }}</td>
+                <td>Br {{ item.price }}</td>
                 <td>
                     {% for category in item.categories.all %}
                     <span class="badge bg-primary">{{ category.name }}</span>

@@ -5,8 +5,10 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from .models import File, UploadedFile
 import os
+from common_user.decorators import public_view, role_required
 
 
+@public_view
 def upload_file(request):
     success_message = None
     errors = []
@@ -52,6 +54,7 @@ def upload_file(request):
     })
 
 
+@role_required('reception')
 @login_required
 def upload_dashboard(request):
     search_query = request.GET.get('search', '')
@@ -76,6 +79,7 @@ def upload_dashboard(request):
     })
 
 
+@role_required('reception')
 @login_required
 def download_file(request, file_id):
     file = get_object_or_404(File, id=file_id)
@@ -84,12 +88,8 @@ def download_file(request, file_id):
     response['Content-Disposition'] = f'attachment; filename="{os.path.basename(file_path)}"'
     return response
 
-@login_required
-def view_file(request, file_id):
-    file = get_object_or_404(File, id=file_id)
-    return render(request, 'upload/view_file.html', {'file': file})
 
-
+@role_required('reception')
 @login_required
 def view_file(request, file_id):
     file = get_object_or_404(File, id=file_id)
@@ -101,6 +101,7 @@ def view_file(request, file_id):
     return render(request, 'upload/view_file.html', {'file': file})
 
 
+@role_required('reception')
 @login_required
 def delete_file(request, file_id):
     file = get_object_or_404(File, id=file_id)
