@@ -83,7 +83,9 @@ ROOT_URLCONF = 'hotelerp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        #'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Add the global templates directory
+
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

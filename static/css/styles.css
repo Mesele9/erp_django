@@ -1,0 +1,71 @@
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-green: #a7c957;
+    --accent-orange: #f28c28;
+}
+
+/* Universal Components */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.navbar-brand img {
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-secondary {
+    background-color: var(--accent-orange);
+    border: none;
+}
+
+.form-section {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    background: #f8f9fa;
+    margin-bottom: 2rem;
+    border: 1px solid #dee2e6;
+}
+
+.rating-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Universal Navigation */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Universal Footer */
+footer {
+    border-top: 3px solid var(--accent-orange);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+    
+    .display-4 {
+        font-size: 2.5rem;
+    }
+    
+    .hotel-policy-list {
+        columns: 1;
+    }
+}

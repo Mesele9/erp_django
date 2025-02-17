@@ -53,7 +53,7 @@ def hr_dashboard(request):
         'upcoming_birthdays': upcoming_birthdays
     }
 
-    return render(request, 'dashboard.html', context)
+    return render(request, 'employee_management/dashboard.html', context)
 
 
 @role_required('hr_staff')
@@ -117,7 +117,7 @@ def employee_list(request):
         'is_paginated': True,
     }
 
-    return render(request, 'employee_list.html', context)
+    return render(request, 'employee_management/employee_list.html', context)
 
 
 @role_required('hr_staff')
@@ -150,7 +150,7 @@ def employee_form_view(request, pk=None):
         'employee': employee
     }
 
-    return render(request, 'employee_form.html', context)
+    return render(request, 'employee_management/employee_form.html', context)
 
 
 @role_required('hr_staff')
@@ -170,7 +170,7 @@ def employee_detail(request, pk):
     next_employee = Employee.objects.filter(is_active=True, id__gt=pk).order_by('pk').first()  # Get the next employee
     previous_employee = Employee.objects.filter(is_active=True, id__lt=employee.id).order_by('-pk').first() # Get the previous employee
     context = {'employee': employee,'previous_employee': previous_employee, 'next_employee': next_employee, 'documents': documents}
-    return render(request, 'employee_detail.html', context)    
+    return render(request, 'employee_management/employee_detail.html', context)    
 
 
 @role_required('hr_staff')
@@ -186,7 +186,7 @@ def department_list(request):
     except EmptyPage:
         page_obj = paginator.get_page(paginator.num_pages)
 
-    return render(request, 'department_list.html', {'page_obj': page_obj})
+    return render(request, 'employee_management/department_list.html', {'page_obj': page_obj})
 
 
 @role_required('hr_staff')
@@ -200,7 +200,7 @@ def department_create(request):
             return redirect('department_list')
     else:
         form = DepartmentForm()
-    return render(request, 'department_form.html', {'form': form})
+    return render(request, 'employee_management/department_form.html', {'form': form})
 
 
 @role_required('hr_staff')
@@ -215,7 +215,7 @@ def department_update(request, pk):
             return redirect('department_list')
     else:
         form = DepartmentForm(instance=department)
-    return render(request, 'department_form.html', {'form': form})
+    return render(request, 'employee_management/department_form.html', {'form': form})
 
 
 @role_required('hr_staff')
@@ -240,7 +240,7 @@ def position_list(request):
     except EmptyPage:
         page_obj = paginator.get_page(paginator.num_pages)
 
-    return render(request, 'position_list.html', {'page_obj': page_obj})
+    return render(request, 'employee_management/position_list.html', {'page_obj': page_obj})
 
 
 @role_required('hr_staff')
@@ -254,7 +254,7 @@ def position_create(request):
             return redirect('position_list')
     else:
         form = PositionForm()
-    return render(request, 'position_form.html', {'form': form})
+    return render(request, 'employee_management/position_form.html', {'form': form})
 
 
 @role_required('hr_staff')
@@ -269,7 +269,7 @@ def position_update(request, pk):
             return redirect('position_list')
     else:
         form = PositionForm(instance=position)
-    return render(request, 'position_form.html', {'form': form})
+    return render(request, 'employee_management/position_form.html', {'form': form})
 
 
 @role_required('hr_staff')
@@ -300,7 +300,7 @@ def document_list(request):
     except EmptyPage:
         page_obj = paginator.get_page(paginator.num_pages)
 
-    return render(request, 'document_list.html', {'page_obj': page_obj, 'employee': employee})
+    return render(request, 'employee_management/document_list.html', {'page_obj': page_obj, 'employee': employee})
 
 
 @role_required('hr_staff')
@@ -327,7 +327,7 @@ def document_update(request, pk):
             return redirect('document_list')
     else:
         form = DocumentForm(instance=document)
-    return render(request, 'document_upload_form.html', {'form': form})
+    return render(request, 'employee_management/document_upload_form.html', {'form': form})
 
 
 @role_required('hr_staff')
@@ -363,7 +363,7 @@ def document_upload_form(request, include_employee_field=True, employee=None):
         context = {
             'form': form,
         }
-    return render(request, 'document_upload_form.html', context)
+    return render(request, 'employee_management/document_upload_form.html', context)
 
 
 @role_required('hr_staff')
