@@ -1,0 +1,86 @@
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+}
+
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.navbar-brand img {
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.badge {
+    font-size: 0.9em;
+    letter-spacing: 0.5px;
+}
+
+.list-group-item {
+    border-left: 3px solid var(--secondary-color);
+}
+
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+    
+    .display-4 {
+        font-size: 2.5rem;
+    }
+}
+
+.amenities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.5rem;
+}
+
+.amenity-item {
+    padding: 0.5rem;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.amenity-item i {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
+}
+
+/* Add these to existing CSS */
+.hotel-policy-list {
+    columns: 2;
+    column-gap: 3rem;
+}
+
+@media (max-width: 768px) {
+    .hotel-policy-list {
+        columns: 1;
+    }
+}
+
+.card-img-top {
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.bg-primary .text-white {
+    background-color: var(--primary-color) !important;
+}
+
+.badge.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.alert-info {
+    background-color: #e3f2fd;
+    border-color: #bbdefb;
+}

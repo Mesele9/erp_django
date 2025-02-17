@@ -9,8 +9,16 @@ class RoleBasedAccessMiddleware:
             'login_view',
             'logout',
             'menu_view',
+            'menu_item_detail',
             'upload_file',
             'qr_code_page',
+            'feedback_view',
+            'feedback_success_view',
+            'welcome',
+            'policies',
+            'services',
+            'attractions',
+            'room_info'
             # Add other public view names here
         ]
 

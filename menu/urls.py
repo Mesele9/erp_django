@@ -5,9 +5,8 @@ urlpatterns = [
     path('', views.menu_view, name='menu'),
     path('item/<int:item_id>/', views.menu_item_detail, name='menu_item_detail'),
 
-    path('menu-dashboard/', views.menu_dashboard, name='menu_dashboard'),
-    
     # MenuItem URLs
+    path('menu-dashboard/', views.menu_dashboard, name='menu_dashboard'),
     path('dashboard/menu-items/', views.menu_item_list, name='menu_item_list'),
     path('dashboard/menu-items/create/', views.menu_item_create, name='menu_item_create'),
     path('dashboard/menu-items/update/<int:pk>/', views.menu_item_update, name='menu_item_update'),

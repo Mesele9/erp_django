@@ -1,0 +1,44 @@
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+}
+
+.star-rating-group {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.star-rating-label input[type="radio"] {
+    display: none;
+}
+
+.star-rating-label .star {
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.star-rating-label input[type="radio"]:checked ~ .star {
+    color: #f1c40f;
+}
+
+.star-rating-label:hover .star {
+    color: #f1c40f;
+}
+
+.required-field label::after {
+    content: "*";
+    color: #e74c3c;
+    margin-left: 3px;
+}
+
+.card-header {
+    padding: 1.5rem;
+    border-radius: 0.5rem 0.5rem 0 0 !important;
+}
+
+.brand-logo {
+    height: 120px;
+    width: auto;
+}
