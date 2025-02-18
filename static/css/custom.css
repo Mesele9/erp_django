@@ -1,3 +1,55 @@
+
+
+.list-group-item {
+    border-left: 3px solid var(--secondary-color);
+}
+
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+    
+    .display-4 {
+        font-size: 2.5rem;
+    }
+}
+
+.amenities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.5rem;
+}
+
+.amenity-item {
+    padding: 0.5rem;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.amenity-item i {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
+}
+
+/* Add these to existing CSS */
+.hotel-policy-list {
+    columns: 2;
+    column-gap: 3rem;
+}
+
+@media (max-width: 768px) {
+    .hotel-policy-list {
+        columns: 1;
+    }
+}
+
+
+
+
+
 /* General Styles */
 body {
     background: linear-gradient(135deg, #f8f9fa, #e0f7fa);

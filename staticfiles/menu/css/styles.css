@@ -7,9 +7,10 @@ body {
     padding: 0;
 }
 
-/* Header with Logo */
+
+/* Title Bar */
 .title-bar {
-    background-color: #a7c957; /* Sage Green */
+    background-color: #f28c28; /* Updated to Orange */
     color: white;
     display: flex;
     align-items: center;
@@ -19,16 +20,34 @@ body {
 }
 
 .title-bar img {
-    height: 100px; /* Adjust size as needed */
-    margin-right: 10px; /* Space between logo and text */
+    height: 80px; /* Reduced from 100px for a sleeker look */
+    margin-right: 10px;
     width: auto;
 }
 
 .title-bar h1 {
     margin: 0;
-    font-size: 32px; /* Larger font size */
+    font-size: 32px;
     font-weight: bold;
-    color: white; /* White text for contrast */
+    color: white;
+}
+
+/* Navigation Bar Styles */
+.nav-orange {
+    background-color: #d95d16; /* Dark Orange for the navigation bar */
+}
+
+.navbar-nav .nav-link {
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    color: #fff !important;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+    color: #ffe6cc !important;
+    text-decoration: underline;
 }
 
 
@@ -167,7 +186,7 @@ body {
 }
 
 .form-check-input:checked + .star-label {
-    background-color: #0d6efd;
+    background-color: #ffd700;
     color: white;
 }
 
@@ -181,3 +200,67 @@ body {
     width: 0;
     height: 0;
 }
+
+/* Footer */
+footer {
+    background-color: #f8f9fa;
+    border-top: 2px solid #a7c957; /* Sage Green */
+}
+
+footer a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+footer a:hover {
+    color: #f28c28; /* Orange */
+}
+
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+    background-color: #f28c28; /* Orange */
+    color: white;
+    border-radius: 12px 12px 0 0;
+}
+
+/* Buttons */
+.btn-secondary {
+    background-color: #f28c28; /* Orange */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-secondary:hover {
+    background-color: #c76d1b; /* Darker Orange */
+}
+
+/* Forms */
+.form-control {
+    border-radius: 8px;
+    border: 2px solid #a7c957; /* Sage Green */
+}
+
+.form-control:focus {
+    border-color: #f28c28; /* Orange */
+    box-shadow: 0 0 0 0.2rem rgba(242, 140, 40, 0.25);
+}
+
