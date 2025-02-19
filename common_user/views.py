@@ -122,15 +122,23 @@ def qr_code_page(request):
     # Generate URLs
     menu_url = request.build_absolute_uri('/menu')
     upload_url = request.build_absolute_uri('/upload')
+    feedback_url = request.build_absolute_uri('/feedback')
+    room_directory_url = request.build_absolute_uri('/room_directory')
     
     # Generate QR codes
     menu_qr = generate_qr_code(menu_url, color='#2c3e50')
     upload_qr = generate_qr_code(upload_url, color='#27ae60')
-    
+    feedback_qr = generate_qr_code(feedback_url, color='#001F3F')
+    room_directory_qr = generate_qr_code(room_directory_url, color='#007FFF')
+
     context = {
         'menu_url': menu_url,
         'upload_url': upload_url,
+        'feedback_url': feedback_url,
+        'room_directory_url': room_directory_url,
         'menu_qr': menu_qr,
         'upload_qr': upload_qr,
+        'feedback_qr': feedback_qr,
+        'room_directory_qr': room_directory_qr
     }
     return render(request, 'common_user/qr_code_page.html', context)

@@ -19,6 +19,8 @@
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" href="{% url 'hr_dashboard' %}">HR Dashboard</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'store_dashboard' %}">Store Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'menu_dashboard' %}">Menu Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'feedback_dashboard' %}">Feedback Dashboard</a></li>
             </ul>
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
