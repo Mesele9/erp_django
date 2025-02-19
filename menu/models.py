@@ -28,7 +28,7 @@ class Tag(models.Model):
 
 class MenuItem(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     categories = models.ManyToManyField(Category)
     tags = models.ManyToManyField(Tag, blank=True)
