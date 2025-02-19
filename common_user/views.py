@@ -127,7 +127,7 @@ def qr_code_page(request):
     
     # Generate QR codes
     menu_qr = generate_qr_code(menu_url, color='#2c3e50')
-    upload_qr = generate_qr_code(upload_url, color='#27ae60')
+    upload_qr = generate_qr_code(upload_url, color='#001F3F')
     feedback_qr = generate_qr_code(feedback_url, color='#001F3F')
     room_directory_qr = generate_qr_code(room_directory_url, color='#007FFF')
 
