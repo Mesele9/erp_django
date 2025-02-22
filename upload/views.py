@@ -23,7 +23,7 @@ def upload_file(request):
         'image/jpeg',
         'image/png',
     ]
-    max_size = 10 * 1024 * 1024  # 10MB
+    max_size = 20 * 1024 * 1024  # 10MB
 
     if request.method == 'POST':
         uploaded_files = request.FILES.getlist('files')
@@ -34,7 +34,7 @@ def upload_file(request):
             if file.content_type not in allowed_types:
                 errors.append(f"Invalid file type: {file.name}")
             elif file.size > max_size:
-                errors.append(f"File too large: {file.name} (Max 10MB)")
+                errors.append(f"File too large: {file.name} (Max 20MB)")
             else:
                 valid_files.append(file)
 
